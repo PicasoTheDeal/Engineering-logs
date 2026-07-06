@@ -91,6 +91,17 @@
             font-weight: 400;
             opacity: 0.85;
         }
+
+        .post-meta .tag-main { 
+            color: var(--accent); 
+            font-weight: 700;
+        }
+
+        .post-meta .tag-sub {
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.85;
+        }
         .content { 
             font-size: 0.95rem; 
             color: var(--text-secondary); 
@@ -161,13 +172,13 @@ async function loadActiveLog() {
         document.title = `${log.title} — PicasoTheDealer`;
         document.getElementById('post-title').innerText = log.title;
         
-
         let tagsHTML = '';
         if (log.category) {
             const rawTags = log.category.split(',');
             rawTags.forEach((tag, index) => {
                 const cleanTag = tag.trim();
                 if (cleanTag) {
+                    // First tag gets 'tag-main', subsequent tags get 'tag-sub'
                     const tagClass = index === 0 ? 'tag-main' : 'tag-sub';
                     tagsHTML += `<span class="${tagClass}">[${cleanTag}]</span> `;
                 }
@@ -186,8 +197,6 @@ async function loadActiveLog() {
         document.getElementById('post-content').innerText = "Specified kernel documentation segment could not be located on the filesystem host cluster.";
     }
 }
-
-document.addEventListener('DOMContentLoaded', loadActiveLog);
 
 document.addEventListener('DOMContentLoaded', loadActiveLog);
     </script>
