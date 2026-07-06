@@ -79,33 +79,33 @@
         .content { 
             font-size: 0.95rem; 
             color: var(--text-secondary); 
-            white-space: pre-wrap; 
             padding-bottom: 80px; 
         }
-#content-container h2 {
+#post-content h2 {
     font-size: 1.15rem;
     color: var(--accent, #5b7a9e);
-    margin-top: 24px;
+    margin-top: 32px;
     margin-bottom: 12px;
     border-bottom: 1px solid var(--border-subtle, #161d28);
     padding-bottom: 6px;
 }
 
-#content-container p {
+#post-content p {
     color: var(--text-primary, #e6edf3);
-    line-height: 1.6;
-    margin-bottom: 16px;
+    line-height: 1.7;
+    margin-bottom: 18px;
 }
 
-#content-container pre {
+#post-content pre {
     background: #050505;
-    border: 1px solid var(--border-default, #1c2333);
+    border: 1px solid var(--border-subtle, #161d28);
     padding: 14px;
     overflow-x: auto;
     font-family: var(--font-mono), monospace;
+    margin-bottom: 18px;
 }
 
-#content-container code {
+#post-content code {
     font-family: var(--font-mono), monospace;
     color: #ff79c6; 
 }
@@ -125,41 +125,38 @@
     </div>
 
     <script>
-        async function loadActiveLog() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-            
-            if(!id) { 
-                window.location.href = '/'; 
-                return; 
-            }
-            
-            try {
-                const res = await fetch(`/posts/${id}.json`);
-                
-                if(!res.ok) {
-                    throw new Error();
-                }
-                
-                const log = await res.json();
-                
-                document.title = `${log.title} — PicasoTheDealer`;
-                document.getElementById('post-title').innerText = log.title;
-                document.getElementById('post-meta').innerHTML = `<span>[${log.category}]</span> ${log.date} &bull; ${log.readTime} min read`;
-                try {
-                    const rawMarkdown = log.content;
-                    document.getElementById('content-container').innerHTML = marked.parse(rawMarkdown);
-                } catch (e) {
-                    console.error("Failed to parse system log markdown string:", e);
-                }
-                
-            } catch(e) {
-                document.getElementById('post-title').innerText = "FATAL: LOG UNRESOLVED";
-                document.getElementById('post-content').innerText = "Specified kernel documentation segment could not be located on the filesystem host cluster.";
-            }
+async function loadActiveLog() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    
+    if(!id) { 
+        window.location.href = '/'; 
+        return; 
+    }
+    
+    try {
+        const res = await fetch(`/posts/${id}.json`);
+        
+        if(!res.ok) {
+            throw new Error();
         }
         
-        document.addEventListener('DOMContentLoaded', loadActiveLog);
+        const log = await res.json();
+        
+        document.title = `${log.title} — PicasoTheDealer`;
+        document.getElementById('post-title').innerText = log.title;
+        document.getElementById('post-meta').innerHTML = `<span>[${log.category}]</span> ${log.date || 'Jul 6, 2026'} &bull; ${log.readTime} min read`;
+        
+        const rawMarkdown = log.content;
+        document.getElementById('post-content').innerHTML = marked.parse(rawMarkdown);
+        
+    } catch(e) {
+        document.getElementById('post-title').innerText = "FATAL: LOG UNRESOLVED";
+        document.getElementById('post-content').innerText = "Specified kernel documentation segment could not be located on the filesystem host cluster.";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadActiveLog);
     </script>
 </body>
 </html>
