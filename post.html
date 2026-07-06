@@ -6,6 +6,7 @@
     <title>Kernel Log View</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --bg-primary: #0f0f0f;
@@ -81,6 +82,33 @@
             white-space: pre-wrap; 
             padding-bottom: 80px; 
         }
+#content-container h2 {
+    font-size: 1.15rem;
+    color: var(--accent, #5b7a9e);
+    margin-top: 24px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle, #161d28);
+    padding-bottom: 6px;
+}
+
+#content-container p {
+    color: var(--text-primary, #e6edf3);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+#content-container pre {
+    background: #050505;
+    border: 1px solid var(--border-default, #1c2333);
+    padding: 14px;
+    overflow-x: auto;
+    font-family: var(--font-mono), monospace;
+}
+
+#content-container code {
+    font-family: var(--font-mono), monospace;
+    color: #ff79c6; 
+}
     </style>
 </head>
 <body>
@@ -118,7 +146,12 @@
                 document.title = `${log.title} — PicasoTheDealer`;
                 document.getElementById('post-title').innerText = log.title;
                 document.getElementById('post-meta').innerHTML = `<span>[${log.category}]</span> ${log.date} &bull; ${log.readTime} min read`;
-                document.getElementById('post-content').innerText = log.content;
+                try {
+                    const rawMarkdown = log.content;
+                    document.getElementById('content-container').innerHTML = marked.parse(rawMarkdown);
+                } catch (e) {
+                    console.error("Failed to parse system log markdown string:", e);
+                }
                 
             } catch(e) {
                 document.getElementById('post-title').innerText = "FATAL: LOG UNRESOLVED";
