@@ -178,7 +178,6 @@ async function loadActiveLog() {
             rawTags.forEach((tag, index) => {
                 const cleanTag = tag.trim();
                 if (cleanTag) {
-                    // First tag gets 'tag-main', subsequent tags get 'tag-sub'
                     const tagClass = index === 0 ? 'tag-main' : 'tag-sub';
                     tagsHTML += `<span class="${tagClass}">[${cleanTag}]</span> `;
                 }
