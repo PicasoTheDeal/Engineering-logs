@@ -1,0 +1,23 @@
+# Cloudflare Wrangler local state & cache
+.wrangler/
+wrangler.toml
+
+# Local Environment Variables (Keep your ADMIN_SECRET safe)
+.env
+.env.*
+*.local
+
+# Node/Dependencies (Future-proofing)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+

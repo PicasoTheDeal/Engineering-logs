@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kernel Log View</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --border-subtle: #161d28;
+            --text-primary: #e6edf3;
+            --text-secondary: #b1bac4;
+            --text-tertiary: #8b949e;
+            --accent: #5b7a9e;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        *, *::before, *::after { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        html { 
+            background-color: var(--bg-primary); 
+            font-family: var(--font-mono); 
+            color: var(--text-primary); 
+        }
+        
+        body { 
+            padding: 60px 20px; 
+            line-height: 1.7; 
+        }
+        
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        
+        header { 
+            border-bottom: 1px solid var(--border-subtle); 
+            padding-bottom: 24px; 
+            margin-bottom: 40px; 
+        }
+        
+        .back-link { 
+            font-size: 0.8rem; 
+            color: var(--text-tertiary); 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            margin-bottom: 24px; 
+        }
+        
+        .back-link:hover { 
+            color: var(--accent); 
+        }
+        
+        h1 { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            letter-spacing: -0.02em; 
+            margin-bottom: 12px; 
+        }
+        
+        .meta { 
+            font-size: 0.75rem; 
+            color: var(--text-tertiary); 
+        }
+        
+        .meta span { 
+            color: var(--accent); 
+        }
+        
+        .content { 
+            font-size: 0.95rem; 
+            color: var(--text-secondary); 
+            white-space: pre-wrap; 
+            padding-bottom: 80px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">
+                <i class="bi bi-arrow-left"></i>
+                Core Logs Feed
+            </a>
+            <h1 id="post-title">Resolving Mapping Descriptor...</h1>
+            <div class="meta" id="post-meta"></div>
+        </header>
+        <main class="content" id="post-content"></main>
+    </div>
+
+    <script>
+        async function loadActiveLog() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            
+            if(!id) { 
+                window.location.href = '/'; 
+                return; 
+            }
+            
+            try {
+                const res = await fetch(`/posts/${id}.json`);
+                
+                if(!res.ok) {
+                    throw new Error();
+                }
+                
+                const log = await res.json();
+                
+                document.title = `${log.title} — PicasoTheDealer`;
+                document.getElementById('post-title').innerText = log.title;
+                document.getElementById('post-meta').innerHTML = `<span>[${log.category}]</span> ${log.date} &bull; ${log.readTime} min read`;
+                document.getElementById('post-content').innerText = log.content;
+                
+            } catch(e) {
+                document.getElementById('post-title').innerText = "FATAL: LOG UNRESOLVED";
+                document.getElementById('post-content').innerText = "Specified kernel documentation segment could not be located on the filesystem host cluster.";
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadActiveLog);
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Systems Console — Node Writer</title>
+    <title>Systems Console — Node Purge</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -13,25 +13,22 @@
             padding: 40px 20px; 
             line-height: 1.5; 
         }
-        
         .panel { 
             max-width: 700px; 
             margin: 0 auto; 
             border: 1px solid #1c2333; 
             padding: 32px; 
         }
-        
         h2 { 
             font-size: 1.2rem; 
             margin-bottom: 24px; 
             border-bottom: 1px solid #161d28; 
             padding-bottom: 12px; 
+            color: #ff7b72; 
         }
-        
         .field { 
             margin-bottom: 20px; 
         }
-        
         label { 
             display: block; 
             font-size: 0.75rem; 
@@ -39,8 +36,7 @@
             margin-bottom: 8px; 
             text-transform: uppercase; 
         }
-        
-        input, textarea { 
+        input { 
             width: 100%; 
             background: #0d1117; 
             border: 1px solid #1c2333; 
@@ -49,12 +45,10 @@
             font-family: inherit; 
             font-size: 0.85rem; 
         }
-        
-        input:focus, textarea:focus { 
-            border-color: #5b7a9e; 
+        input:focus { 
+            border-color: #ff7b72; 
             outline: none; 
         }
-        
         button { 
             background: #1c2333; 
             color: #e6edf3; 
@@ -65,90 +59,63 @@
             cursor: pointer; 
             transition: 0.2s; 
         }
-        
         button:hover { 
-            background: #253046; 
+            background: #462525; 
+            border-color: #ff7b72; 
         }
-        
         #status { 
             margin-top: 16px; 
             font-size: 0.85rem; 
-            color: #5b7a9e; 
+            color: #ff7b72; 
             font-weight: bold; 
         }
     </style>
 </head>
 <body>
     <div class="panel">
-        <h2>System Output Node Console</h2>
+        <h2>System Purge Protocol</h2>
         <div class="field">
             <label>Auth Access Key</label>
             <input type="password" id="secret" autocomplete="current-password">
         </div>
         <div class="field">
-            <label>Post ID (URL Slug, e.g. dsbom-engine)</label>
-            <input type="text" id="id">
+            <label>Node ID to Purge</label>
+            <input type="text" id="id" placeholder="e.g. dsbom-engine">
         </div>
-        <div class="field">
-            <label>Article Title</label>
-            <input type="text" id="title">
-        </div>
-        <div class="field">
-            <label>Category Tag</label>
-            <input type="text" id="category" placeholder="e.g. Kernel Telemetry">
-        </div>
-        <div class="field">
-            <label>Est. Read Time (Minutes)</label>
-            <input type="number" id="readTime" value="5">
-        </div>
-        <div class="field">
-            <label>Brief Feed Excerpt</label>
-            <textarea id="excerpt" rows="3"></textarea>
-        </div>
-        <div class="field">
-            <label>Main Content Body (Supports Markdown formatting)</label>
-            <textarea id="content" rows="16"></textarea>
-        </div>
-        <button type="button" onclick="commitLogNode()">Execute System Push</button>
-        <button type="button" onclick="deletePost(document.getElementById('id').value.trim())">Delete Log</button>
+        <button type="button" onclick="purgeLogNode()">Execute System Purge</button>
         <div id="status"></div>
     </div>
 
     <script>
-        async function commitLogNode() {
+        async function purgeLogNode() {
             const status = document.getElementById('status');
-            status.innerText = "[*] Transmitting packet matrix to Cloudflare edge...";
+            const id = document.getElementById('id').value.trim();
             
-            const payload = {
-                secret: document.getElementById('secret').value,
-                id: document.getElementById('id').value.trim(),
-                title: document.getElementById('title').value.trim(),
-                category: document.getElementById('category').value.trim() || 'Systems',
-                readTime: document.getElementById('readTime').value,
-                excerpt: document.getElementById('excerpt').value.trim(),
-                content: document.getElementById('content').value
-            };
+            if (!confirm(`CAUTION: This will permanently delete node '${id}'. Proceed?`)) return;
 
+            status.innerText = "[*] Transmitting purge command to Cloudflare edge...";
+            
             try {
                 const res = await fetch('/api/publish', {
-                    method: 'POST',
+                    method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        secret: document.getElementById('secret').value,
+                        id: id
+                    })
                 });
-                
-                const output = await res.json();
-                
+
                 if(res.ok) {
                     status.style.color = '#3fb950';
-                    status.innerText = "[+] Node synchronization complete. Pipeline rebuilding.";
-                    document.getElementById('content').value = ''; // clear on success
+                    status.innerText = `[+] Node '${id}' purged. Pipeline rebuilding. (Remember: git pull, if locally deployed)`;
                 } else {
+                    const output = await res.json();
                     status.style.color = '#f85149';
                     status.innerText = `[-] Pipeline rejection: ${output.error}`;
                 }
             } catch(e) {
                 status.style.color = '#f85149';
-                status.innerText = "[-] Network execution error. Is the Cloudflare function active?";
+                status.innerText = "[-] Network execution error.";
             }
         }
     </script>

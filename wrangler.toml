@@ -1,0 +1,6 @@
+name = "engineering-logs"
+compatibility_date = "2026-07-05"
+
+[vars]
+GITHUB_TOKEN = "YOUR_GITHUB_TOKEN"
+ADMIN_SECRET = "YOUR_ADMIN_SECRET"
