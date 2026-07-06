@@ -1,5 +1,13 @@
 [
   {
+    "id": "zeroshadow-runtime-cfi-tracker",
+    "title": "ZeroShadow: Runtime CFI and Syscall Interception Evasion Mitigation",
+    "category": "Systems Security, Kernel, C++17, EFL",
+    "readTime": "7",
+    "date": "Jul 6, 2026",
+    "excerpt": "A deep dive into building an execution-tracking engine that single-steps active threads, enforces dynamic memory boundaries, and closes TOCTOU windows during syscall interception."
+  },
+  {
     "id": "dsbom-runtime-vfs-tracing",
     "title": "dSBOM: Non-Invasive Runtime Software Bills of Materials via Kernel VFS Tracing",
     "category": "Systems Security, C++20, Linux Kernel, VFS, CycloneDX",
