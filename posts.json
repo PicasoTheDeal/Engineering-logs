@@ -1,5 +1,13 @@
 [
   {
+    "id": "dsbom-runtime-vfs-tracing",
+    "title": "dSBOM: Non-Invasive Runtime Software Bills of Materials via Kernel VFS Tracing",
+    "category": "Systems Security, C++20, Linux Kernel, VFS, CycloneDX",
+    "readTime": "7",
+    "date": "Jul 6, 2026",
+    "excerpt": "How the dSBOM-engine intercepts process hierarchies using ptrace(2) and the Linux kernel virtual filesystem (VFS) to generate zero-overhead, injection-free software bills of materials."
+  },
+  {
     "id": "zeroshadow-cfi-supervisor",
     "title": "ZeroShadow: Low-Level Linux User-Space Supervisor for CFI",
     "category": "Systems Security",
