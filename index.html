@@ -54,8 +54,6 @@
             padding: 0 48px;
         }
 
-
-        /* Hero Section */
         .hero {
             padding: 60px 0 40px;
             border-bottom: 1px solid var(--border-subtle);
@@ -83,7 +81,6 @@
             font-size: 1.05rem;
         }
 
-        /* Navigation */
         .hero-contact-row {
             display: flex;
             gap: 16px;
@@ -109,11 +106,11 @@
             font-size: 0.7rem;
         }
 
-
         .main-grid {
             display: grid;
             grid-template-columns: 1fr var(--track-width);
             gap: 56px;
+            align-items: start;
         }
 
         .section-label {
@@ -123,10 +120,8 @@
             display: block;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            border-left: 3px solid var(--accent-subtle);
-            padding-left: 14px;
+            padding-left: 2px;
         }
-
 
         .blog-post-block {
             padding: 28px 0 28px 18px;
@@ -180,15 +175,84 @@
             color: var(--text-primary);
         }
 
-        /* System Status */
+        .sidebar {
+            position: sticky;
+            top: 40px;
+        }
+
+        .scroll-track-outer {
+            height: 480px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-default);
+            background-color: #0b0b0b;
+            border-radius: 4px;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+        }
+
+        .scroll-track-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 32px 16px;
+            animation: scrollVertical 22s linear infinite;
+            will-change: transform;
+        }
+
+        .scroll-track-outer:hover .scroll-track-inner {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollVertical {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        .track-node-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-node-item i {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        .track-node-item:hover {
+            background-color: var(--border-subtle);
+            border-color: var(--border-default);
+            color: var(--text-primary);
+        }
+
+        .track-node-item:hover i {
+            color: var(--accent);
+        }
+
         .system-status { color: var(--text-tertiary); font-size: 0.85rem; }
         .log-message { color: #8b949e; font-size: 0.9rem; }
         .log-error { color: #ff7b72; font-size: 0.9rem; }
 
-
         @media (max-width: 1100px) {
             .main-grid {
                 grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .sidebar {
+                position: static;
+                margin-top: 20px;
+                max-width: var(--track-width);
             }
         }
     </style>
@@ -213,6 +277,14 @@
                     <p class="system-status">[ system status: querying log manifest... ]</p>
                 </div>
             </main>
+
+            <aside class="sidebar">
+                <span class="section-label">Runtime Engine Clusters</span>
+                <div class="scroll-track-outer">
+                    <div id="tags-scroll-inner" class="scroll-track-inner">
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
 
@@ -221,15 +293,29 @@
             try {
                 const res = await fetch('/posts.json');
                 const logs = await res.json();
-                const container = document.getElementById('posts-container');
-                container.innerHTML = '';
                 
-                if(logs.length === 0) {
-                    container.innerHTML = '<p class="log-message">No execution logs found in manifest.</p>';
+                const postsContainer = document.getElementById('posts-container');
+                const tagsContainer = document.getElementById('tags-scroll-inner');
+                
+                postsContainer.innerHTML = '';
+                tagsContainer.innerHTML = '';
+                
+                if (logs.length === 0) {
+                    postsContainer.innerHTML = '<p class="log-message">No execution logs found in manifest.</p>';
+                    tagsContainer.innerHTML = '<div class="track-node-item"><i class="bi bi-terminal"></i><span>Empty Matrix Ledger</span></div>';
                     return;
                 }
                 
+                const globalTagSet = new Set();
+                
                 logs.forEach(log => {
+                    if (log.category) {
+                        log.category.split(',').forEach(tag => {
+                            const cleanTag = tag.trim();
+                            if (cleanTag) globalTagSet.add(cleanTag);
+                        });
+                    }
+
                     const el = document.createElement('article');
                     el.className = 'blog-post-block';
                     el.innerHTML = `
@@ -238,10 +324,30 @@
                         <p class="post-excerpt">${log.excerpt}</p>
                         <a href="/post.html?id=${log.id}" class="read-more-link">Execute Read Log ──►</a>
                     `;
-                    container.appendChild(el);
+                    postsContainer.appendChild(el);
                 });
+                
+                const dynamicTagsArray = Array.from(globalTagSet);
+                
+                if (dynamicTagsArray.length > 0) {
+                    const mountTags = (tagsList) => {
+                        tagsList.forEach(tag => {
+                            const node = document.createElement('div');
+                            node.className = 'track-node-item';
+                            node.innerHTML = `<i class="bi bi-cpu"></i><span>${tag}</span>`;
+                            tagsContainer.appendChild(node);
+                        });
+                    };
+
+                    mountTags(dynamicTagsArray);
+                    mountTags(dynamicTagsArray);
+                } else {
+                    tagsContainer.innerHTML = '<div class="track-node-item"><i class="bi bi-terminal"></i><span>Standard Sandbox Node</span></div>';
+                }
+                
             } catch(e) {
                 document.getElementById('posts-container').innerHTML = '<p class="log-error">[!] Failed to resolve log mapping descriptor.</p>';
+                document.getElementById('tags-scroll-inner').innerHTML = '<div class="track-node-item"><i class="bi bi-exclamation-triangle"></i><span>Trace Error</span></div>';
             }
         }
         document.addEventListener('DOMContentLoaded', fetchLogs);
