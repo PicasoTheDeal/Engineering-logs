@@ -67,15 +67,30 @@
             margin-bottom: 12px; 
         }
         
-        .meta { 
-            font-size: 0.75rem; 
-            color: var(--text-tertiary); 
-        }
-        
         .meta span { 
             color: var(--accent); 
         }
+
+        .meta { 
+            font-size: 0.75rem; 
+            color: var(--text-tertiary); 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
         
+        .meta .tag-main { 
+            color: var(--accent); 
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .meta .tag-sub {
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.85;
+        }
         .content { 
             font-size: 0.95rem; 
             color: var(--text-secondary); 
@@ -145,7 +160,23 @@ async function loadActiveLog() {
         
         document.title = `${log.title} — PicasoTheDealer`;
         document.getElementById('post-title').innerText = log.title;
-        document.getElementById('post-meta').innerHTML = `<span>[${log.category}]</span> ${log.date || 'Jul 6, 2026'} &bull; ${log.readTime} min read`;
+        
+
+        let tagsHTML = '';
+        if (log.category) {
+            const rawTags = log.category.split(',');
+            rawTags.forEach((tag, index) => {
+                const cleanTag = tag.trim();
+                if (cleanTag) {
+                    const tagClass = index === 0 ? 'tag-main' : 'tag-sub';
+                    tagsHTML += `<span class="${tagClass}">[${cleanTag}]</span> `;
+                }
+            });
+        } else {
+            tagsHTML = `<span class="tag-main">[Systems]</span> `;
+        }
+        
+        document.getElementById('post-meta').innerHTML = `${tagsHTML} &bull; ${log.date || 'Jul 6, 2026'} &bull; ${log.readTime} min read`;
         
         const rawMarkdown = log.content;
         document.getElementById('post-content').innerHTML = marked.parse(rawMarkdown);
@@ -155,6 +186,8 @@ async function loadActiveLog() {
         document.getElementById('post-content').innerText = "Specified kernel documentation segment could not be located on the filesystem host cluster.";
     }
 }
+
+document.addEventListener('DOMContentLoaded', loadActiveLog);
 
 document.addEventListener('DOMContentLoaded', loadActiveLog);
     </script>
