@@ -94,8 +94,8 @@
             <input type="text" id="title">
         </div>
         <div class="field">
-            <label>Category Tag</label>
-            <input type="text" id="category" placeholder="e.g. Kernel Telemetry">
+            <label>Category Tags (Comma Separated)</label>
+            <input type="text" id="category" placeholder="e.g. Kernel, Telemetry, Reverse Engineering">
         </div>
         <div class="field">
             <label>Est. Read Time (Minutes)</label>
@@ -141,7 +141,7 @@
                 if(res.ok) {
                     status.style.color = '#3fb950';
                     status.innerText = "[+] Node synchronization complete. Pipeline rebuilding.";
-                    document.getElementById('content').value = ''; // clear on success
+                    document.getElementById('content').value = '';
                 } else {
                     status.style.color = '#f85149';
                     status.innerText = `[-] Pipeline rejection: ${output.error}`;
