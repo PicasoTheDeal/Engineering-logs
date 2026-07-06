@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "zeroshadow-cfi-supervisor",
+    "title": "ZeroShadow: Low-Level Linux User-Space Supervisor for CFI",
+    "category": "Systems Security",
+    "readTime": "5",
+    "date": "Jul 6, 2026",
+    "excerpt": "Implementing a low-level Linux user-space supervisor that blocks runtime exploitation by single-stepping threads, validating RIP, and mitigating TOCTOU signal masking attacks."
+  }
+]
