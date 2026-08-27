@@ -1,5 +1,13 @@
 [
   {
+    "id": "SAUR-Security-Analysis-and-Threat-Engine",
+    "title": "SAUR: Security Analysis & Threat Engine",
+    "category": "AUR, SAUR, YARA, C++, C, CMAKE, SCANNER",
+    "readTime": "6",
+    "date": "Aug 27, 2026",
+    "excerpt": "A deep dive into building a high-performance system auditor that leverages AVX2 vector instructions, YARA rule-sets, and live URLhaus threat feeds to scan files and memory for malicious payloads, credential leaks, and bad actors."
+  },
+  {
     "id": "zeroshadow-runtime-cfi-tracker",
     "title": "ZeroShadow: Runtime CFI and Syscall Interception Evasion Mitigation",
     "category": "Systems Security, Kernel, C++17, EFL",
