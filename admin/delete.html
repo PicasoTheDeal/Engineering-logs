@@ -15,7 +15,7 @@
   --forest-moss:#67800d;
   --black:#000000;
 
-  --bg:#000000;
+  --bg:#233D4D;
   --fg:#ffffff;
   --fg-dim:rgba(255,255,255,.62);
   --fg-faint:rgba(255,255,255,.36);
@@ -28,6 +28,8 @@
   --font-pixel:'Press Start 2P',system-ui;
 
   --ease:cubic-bezier(.22,1,.36,1);
+
+  --dune-bg:none;
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -46,14 +48,17 @@ body{
 
 ::selection{background:var(--chartreuse); color:var(--black);}
 
-#bg-canvas{position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.65;}
+#bg-canvas{position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.34;}
 
 .topbar{
   position:fixed; top:0; left:0; right:0; z-index:65;
   display:flex; align-items:center; justify-content:space-between;
-  padding:20px clamp(20px,3vw,52px);
+  padding:22px clamp(24px,3.4vw,60px);
   pointer-events:none;
-  mix-blend-mode:difference;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  box-shadow:0 8px 32px rgba(0,0,0,.55);
+  backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
 }
 .wordmark{
   font-family:var(--font-pixel);
@@ -74,14 +79,6 @@ body{
   color:rgba(255,255,255,.55);
 }
 .top-meta .sep{color:rgba(255,255,255,.2);}
-.top-meta .mode-dot{
-  display:inline-block; width:5px; height:5px;
-  background:var(--lime-cream);
-  margin-right:7px;
-  vertical-align:middle;
-  animation:tick 1.6s steps(2,start) infinite;
-}
-@keyframes tick{0%,49%{opacity:1;}50%,100%{opacity:.15;}}
 
 .page-wrapper{
   position:relative;
@@ -176,7 +173,6 @@ body{
 
 .panel{
   border:1px solid var(--line);
-  background:var(--black);
   padding:clamp(22px,3.4vw,34px) clamp(22px,3.2vw,36px);
   display:flex;
   flex-direction:column;
@@ -202,13 +198,6 @@ body{
   color:var(--black);
   background:var(--lime-cream);
   padding:3px 9px;
-}
-.panel-badge::before{
-  content:'';
-  display:inline-block;
-  width:5px; height:5px;
-  background:var(--black);
-  animation:tick 1.6s steps(2,start) infinite;
 }
 .panel-head-title{
   font-family:var(--font-mono);
@@ -248,7 +237,6 @@ body{
 input[type="password"],
 input[type="text"]{
   width:100%;
-  background:#000;
   border:1px solid var(--line);
   padding:13px 15px;
   color:var(--white);
@@ -258,6 +246,13 @@ input[type="text"]{
   caret-color:var(--chartreuse);
   transition:border-color .3s var(--ease), box-shadow .3s var(--ease);
   outline:none;
+  background-color:#233D4D;
+  background-image:
+    linear-gradient(rgba(35,61,77,0.88), rgba(35,61,77,0.88)),
+    var(--dune-bg);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
 }
 input::placeholder{color:var(--fg-ghost);}
 input:hover{border-color:var(--line-hi);}
@@ -296,7 +291,7 @@ input:focus{
 .btn i{font-size:.9rem; transition:transform .35s var(--ease);}
 
 .btn-danger{
-  background:var(--black);
+  background:transparent;
   color:var(--lime-cream);
   border-color:var(--lime-cream);
 }
@@ -327,7 +322,6 @@ input:focus{
   margin-top:4px;
   padding:14px 18px;
   border:1px solid var(--line);
-  background:#000;
   font-family:var(--font-mono);
   font-size:.74rem;
   line-height:1.7;
@@ -349,6 +343,32 @@ input:focus{
   color:var(--black);
 }
 .status .status-prefix{font-weight:700; margin-right:6px;}
+
+/* ── Dune background treatment ─────────────────────────────── */
+.topbar,
+.panel{
+  background-color:#233D4D;
+  background-image:
+    linear-gradient(rgba(35,61,77,0.72), rgba(35,61,77,0.72)),
+    var(--dune-bg);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+
+.status.visible{
+  background-color:#233D4D;
+  background-image:
+    linear-gradient(rgba(35,61,77,0.88), rgba(35,61,77,0.88)),
+    var(--dune-bg);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.status.status-err{
+  background-color:var(--white);
+  background-image:none;
+}
 
 .page-footer{
   border-top:1px solid var(--line);
@@ -387,7 +407,7 @@ input:focus{
 <header class="topbar" aria-label="Site header">
   <a href="/" class="wordmark">TETSTACK<span class="dot">.</span><span class="slash">/</span>ADMIN</a>
   <span class="top-meta">
-    <span><span class="mode-dot"></span>destructive mode</span>
+    <span>destructive mode</span>
     <span class="sep">/</span>
     <span>~/root/console</span>
   </span>
@@ -448,66 +468,94 @@ input:focus{
 </div>
 
 <script>
+/* ── Dune / sand-grain generator (ported from portfolio) ────── */
+const DUNE_DARK  = { r: 35,  g: 61,  b: 77  };
+const DUNE_LIGHT = { r: 255, g: 255, b: 255 };
+
+function duneElevation(px, py) {
+  const warpX = Math.sin(py * 3.8 + 0.4) * 0.18 + Math.cos(py * 7.5) * 0.05;
+  const warpY = Math.cos(px * 3.2 + 1.1) * 0.15 + Math.sin(px * 6.2) * 0.04;
+  const nx = px + warpX;
+  const ny = py + warpY;
+
+  const ridge1 = Math.sin(nx * 3.4 - ny * 2.6);
+  const ridge2 = Math.cos(nx * 5.8 + ny * 4.5 + ridge1 * 1.4);
+  const ripple = Math.sin(nx * 12.0 - ny * 8.0) * 0.15;
+
+  const baseElevation = (ridge1 * 0.55 + ridge2 * 0.3 + ripple + 1) / 2;
+  const sharpCrest = Math.pow(Math.max(0, Math.min(1, baseElevation)), 1.35);
+  const diagonalSweep = px * 0.4 + py * 0.6;
+
+  return Math.max(0, Math.min(1, sharpCrest * 0.55 + diagonalSweep * 0.45));
+}
+
+function paintDune(ctx, w, h, grain){
+  const imgData = ctx.createImageData(w, h);
+  const data = imgData.data;
+  let i = 0;
+  for (let y = 0; y < h; y++){
+    const py = y / h;
+    for (let x = 0; x < w; x++){
+      const px = x / w;
+      const t = duneElevation(px, py);
+      const r = DUNE_DARK.r + t * (DUNE_LIGHT.r - DUNE_DARK.r);
+      const g = DUNE_DARK.g + t * (DUNE_LIGHT.g - DUNE_DARK.g);
+      const b = DUNE_DARK.b + t * (DUNE_LIGHT.b - DUNE_DARK.b);
+      const crestGrit = 1.0 + Math.sin(t * Math.PI) * 0.5;
+      const noise = (Math.random() - 0.5) * grain * crestGrit;
+      data[i]     = Math.min(255, Math.max(0, r + noise));
+      data[i + 1] = Math.min(255, Math.max(0, g + noise));
+      data[i + 2] = Math.min(255, Math.max(0, b + noise));
+      data[i + 3] = 255;
+      i += 4;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+function generateDuneDataUrl(){
+  const w = 800, h = 500;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  paintDune(ctx, w, h, 26);
+  return c.toDataURL('image/jpeg', 0.82);
+}
+
+(function applyDuneBackground(){
+  try {
+    const url = generateDuneDataUrl();
+    document.documentElement.style.setProperty('--dune-bg', 'url("' + url + '")');
+  } catch (e) {
+    console.warn('[tetstack] dune tile failed', e);
+  }
+})();
+
 (function initBackground(){
   const canvas = document.getElementById('bg-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  let W, H, dpr;
 
   function resize(){
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = canvas.width  = Math.floor(window.innerWidth * dpr);
-    H = canvas.height = Math.floor(window.innerHeight * dpr);
-    canvas.style.width  = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width  = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    paintDune(ctx, canvas.width, canvas.height, 26);
   }
+
   resize();
-  window.addEventListener('resize', resize);
-
-  const spacing = 46;
-  let mx = -99999, my = -99999;
-  window.addEventListener('mousemove', (e) => {
-    mx = e.clientX * dpr;
-    my = e.clientY * dpr;
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 140);
   });
-  window.addEventListener('mouseleave', () => { mx = my = -99999; });
-
-  let t = 0;
-  function draw(){
-    t += 0.006;
-    ctx.clearRect(0, 0, W, H);
-
-    const s = spacing * dpr;
-    const cols = Math.ceil(W / s) + 2;
-    const rows = Math.ceil(H / s) + 2;
-    const touch = 190 * dpr;
-
-    for (let i = -1; i < cols; i++){
-      for (let j = -1; j < rows; j++){
-        const x = i * s;
-        const y = j * s + Math.sin(t + i * 0.35 + j * 0.12) * 5 * dpr;
-        const dx = x - mx, dy = y - my;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        const prox = Math.max(0, 1 - d / touch);
-
-        const a = 0.06 + prox * 0.7;
-        const r = (0.9 + prox * 1.8) * dpr;
-
-        if (prox > 0.04){
-          ctx.fillStyle = 'rgba(231,255,141,' + (prox * 0.85).toFixed(3) + ')';
-        } else {
-          ctx.fillStyle = 'rgba(255,255,255,' + a.toFixed(3) + ')';
-        }
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    requestAnimationFrame(draw);
-  }
-  draw();
 })();
 
+/* ── Purge logic ────────────────────────────────────────────── */
 (function initPurgeGate(){
   const secretEl = document.getElementById('secret');
   const idEl     = document.getElementById('id');
