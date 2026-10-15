@@ -507,7 +507,6 @@ body{
 }
 .page-footer .brand-mark{color:var(--lime-cream);}
 
-/* ── Dune background treatment ─────────────────────────────── */
 .topbar,
 .status-cell,
 .rail-card,
@@ -654,7 +653,6 @@ body{
 </div>
 
 <script>
-/* ── Dune / sand-grain generator (ported from portfolio) ────── */
 const DUNE_DARK  = { r: 35,  g: 61,  b: 77  };
 const DUNE_LIGHT = { r: 255, g: 255, b: 255 };
 
@@ -741,7 +739,6 @@ function generateDuneDataUrl(){
   });
 })();
 
-/* ── Log manifest handling ──────────────────────────────────── */
 function escapeHtml(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'

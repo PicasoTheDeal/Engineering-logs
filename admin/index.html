@@ -415,7 +415,6 @@ input:focus, textarea:focus{
 .payload-foot .payload-ok{color:var(--lime-cream);}
 .payload-foot .payload-bad{color:var(--fg-ghost);}
 
-/* ── Dune background treatment ─────────────────────────────── */
 .topbar,
 .panel,
 .payload-head,
@@ -605,7 +604,6 @@ input:focus, textarea:focus{
 </div>
 
 <script>
-/* ── Dune / sand-grain generator (ported from portfolio) ────── */
 const DUNE_DARK  = { r: 35,  g: 61,  b: 77  };
 const DUNE_LIGHT = { r: 255, g: 255, b: 255 };
 
@@ -692,7 +690,6 @@ function generateDuneDataUrl(){
   });
 })();
 
-/* ── Console logic ──────────────────────────────────────────── */
 function escapeHtml(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
