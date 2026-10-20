@@ -174,7 +174,7 @@ body{
 
 .status-strip{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
   margin-bottom:clamp(48px,6vh,72px);
@@ -297,7 +297,6 @@ body{
   line-height:1.5;
 }
 .entry-time .entry-date{color:var(--fg-dim);}
-.entry-time .entry-h{color:var(--chartreuse); font-weight:600;}
 
 .entry-body{padding-top:14px; min-width:0;}
 
@@ -546,8 +545,6 @@ body{
   .status-strip{grid-template-columns:1fr 1fr;}
   .status-cell{padding:16px 16px;}
   .entry{grid-template-columns:26px minmax(0,1fr); gap:14px;}
-  .entry-time{grid-column:2; flex-direction:row; gap:10px; padding-top:0; margin-bottom:8px; align-items:center;}
-  .entry-time .entry-date::after{content:' ·'; color:var(--fg-ghost); margin-left:8px;}
   .entry-body{grid-column:2; padding-top:0;}
   .entry-rail::after{top:4px;}
 }
@@ -758,12 +755,6 @@ function fmtDate(d){
   const day = String(d.getDate()).padStart(2, '0');
   return y + '/' + m + '/' + day;
 }
-function fmtTime(d){
-  if (!d) return '--:--';
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return hh + ':' + mm;
-}
 
 function timeAgo(d){
   if (!d) return '--';
@@ -779,7 +770,6 @@ function timeAgo(d){
 function renderEntry(log, idx){
   const d = parseDate(log.date);
   const date = fmtDate(d);
-  const time = fmtTime(d);
 
   const tags = (log.category || 'Systems').split(',').map(t => t.trim()).filter(Boolean);
   const tagsHTML = tags.map((t, i) =>
@@ -794,7 +784,6 @@ function renderEntry(log, idx){
     '<div class="entry-rail" aria-hidden="true"></div>' +
     '<div class="entry-time">' +
       '<span class="entry-date">' + date + '</span>' +
-      '<span class="entry-h">' + time + '</span>' +
     '</div>' +
     '<div class="entry-body">' +
       '<div class="entry-tags">' + tagsHTML + '</div>' +
