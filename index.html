@@ -601,11 +601,6 @@ body{
       <span class="status-num" id="stat-tags">--</span>
       <span class="status-lbl">Active Tags</span>
     </div>
-    <div class="status-cell">
-      <span class="status-num" id="stat-latest">--</span>
-      <span class="status-lbl">Latest Entry</span>
-    </div>
-
   </section>
 
   <div class="main-grid">
@@ -859,11 +854,8 @@ async function fetchLogs(){
       recentList.appendChild(a);
     });
 
-    const latestD = sorted.length ? parseDate(sorted[0].date) : null;
-
     setText('stat-entries', logs.length);
     setText('stat-tags',    tagArr.length);
-    setText('stat-latest',  latestD ? timeAgo(latestD) : '—');
     setText('rail-entries', logs.length);
     setText('rail-tags',    tagArr.length);
 
