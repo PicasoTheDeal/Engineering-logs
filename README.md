@@ -63,6 +63,6 @@ Purge: http://localhost:8788/admin/delete.html
 
 ## Stack
 
-Vanilla HTML/CSS/JS · marked for markdown · one Pages Function · Git as
-storage · procedural dune canvas (no image assets).
+Vanilla HTML/CSS/JS, marked for markdown, one Pages Function, Git as
+storage,  procedural dune canvas (no image assets),
 text.
