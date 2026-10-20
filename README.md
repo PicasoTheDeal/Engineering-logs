@@ -1,7 +1,7 @@
 # Engineering Logs
 
 Log stream engine. Vanilla frontend, edge worker for mutations, Git as the DB.
-No manual JSON — the admin console commits every write through a Pages Function.
+No manual JSON the admin console commits every write through a Pages Function.
 
 ## Routes
 
@@ -65,5 +65,4 @@ Purge: http://localhost:8788/admin/delete.html
 
 Vanilla HTML/CSS/JS · marked for markdown · one Pages Function · Git as
 storage · procedural dune canvas (no image assets).
-text
-
+text.
