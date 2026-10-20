@@ -1,65 +1,69 @@
 # Engineering Logs
 
-A minimalist, high-performance log stream engine built with vanilla frontend components and an automated administration pipeline. Instead of manual JSON curation, content mutations are managed via an integrated administrative control panel authenticated via secure token validation.
+Log stream engine. Vanilla frontend, edge worker for mutations, Git as the DB.
+No manual JSON — the admin console commits every write through a Pages Function.
 
-## Page Access Matrix
+## Routes
 
-| Path | Route Type | Operational Purpose |
+| Path | Access | What it does |
 | :--- | :--- | :--- |
-| / | Public | Main telemetry dashboard. Dynamically maps out the entire list of publications and populates the runtime clusters navigation drawer. |
-| /post?id=post-id | Public | Targeted log reader. Intercepts the unique ID parameter from the URL query string to match and parse data. |
-| /admin | Restrictive | Administrative control deck. Handles structural creation, parsing, payload initialization, and log deprecation. |
+| `/` | Public | Runtime dashboard. Reads `posts.json`, renders the stream, tags, sidebar. |
+| `/post.html?id=node-id` | Public | Node reader. Parses the id, renders markdown, builds TOC + progress. |
+| `/admin/` | Restrictive | Publish console. Compose → validate key → commit. |
+| `/admin/delete.html` | Restrictive | Purge console. Kill a node, prune the manifest. |
 
-## Core Architecture and Execution Flow
+## How it moves
 
-The engine shifts processing weight to the client and edge to maintain a near-zero infrastructure footprint:
+- **Writes only through the edge.** Both consoles POST/DELETE to `/api/publish`.
+  That function commits to the repo via the GitHub Contents API.
+- **Manifest stays synced.** Every publish/purge rewrites `posts.json` in the
+  same call. Updates fetch the current `sha` first, so re-publishing a node
+  doesn't 422.
+- **Key check happens first.** Mismatched `ADMIN_SECRET` → 401 before any GitHub
+  call.
+- **CORS is on.** `_headers` opens `posts.json` so your portfolio can pull live
+  metadata.
 
-* Automated Mutations: Content is never manually injected into raw source code files. The admin page interface routes creation and deletion requests directly through edge workers or dynamic route handlers.
-* Token Authentication: Data persistence and write operations require an explicit handshake validated by an internal environment variable (AUTH_SECRET). If the provided client token does not match the secret token at the edge, the execution block is terminated instantly with a 401 response.
-* Cross-Origin Streaming (CORS): The explicit _headers profile configures access controls on target files, letting separate systems (like your main portfolio interface) transparently query down live status metadata without running into browser-side resource blocks.
+## Storage
 
-## Local Sandbox Deployment
+```JSON
+posts.json → [{ id, title, category, readTime, date, excerpt }]
+posts/{id}.json → same fields + { content } (markdown)
+```
 
-To launch and run the entire environment locally exactly as it operates inside the production edge runtime, execute the following commands using the native node package runner:
+`date` is ISO 8601. Dashboard renders `YYYY/MM/DD`; no time-of-day shown.
 
-### 1. Initialize Project Directory
+## Local
+
 ```bash
-git clone [https://github.com/PicasoTheDeal/engineering-logs.git](https://github.com/PicasoTheDeal/engineering-logs.git)
+git clone https://github.com/PicasoTheDeal/engineering-logs.git
 cd engineering-logs
 ```
 
-### 2. Provision Local Environment Variables
+### .dev.vars:
 
-Create a local .dev.vars file in the root directory to store your operational keys for local testing:
-```Plaintext
+```plaintext
 
-AUTH_SECRET=your_secure_development_token_here
+ADMIN_SECRET=dev_key_here
+GITHUB_TOKEN=ghp_xxx
 ```
+`GITHUB_TOKEN` needs Contents: Read and write (fine-grained) or `repo`
+scope (classic). Selected-repo tokens must include this repo.
 
-### 3. Spin Up Cloudflare Production Simulation
-
-Fire up the local edge emulator using Wrangler. This sets up local listeners without globally polluting your system dependencies:
-```Bash
-
+```bash
 npx wrangler pages dev .
 ```
 
-### 4. Verification
+Hub: http://localhost:8788
 
-Once running, navigate to the terminal-provided local loopback address:
+Publish: http://localhost:8788/admin/
 
-    Local Application Hub: http://localhost:8788
+Purge: http://localhost:8788/admin/delete.html
 
-    Local Admin Interface: http://localhost:8788/admin
 
-## Deployment and Forking Guide
+## Stack
 
-If you want to use this architecture for your own logs or portfolio:
+Vanilla HTML/CSS/JS · marked for markdown · one Pages Function · Git as
+storage · procedural dune canvas (no image assets).
+text
 
-    Fork the Repository: Click the Fork button at the top right of this GitHub page.
-
-    Link to Cloudflare: Go to your Cloudflare Dashboard, navigate to Pages, click Connect to Git, and select your forked repository. Leave the build command and build output directory empty as it is a static site.
-
-    Configure Environment Secret: In your Cloudflare Pages project settings, add an environment variable named AUTH_SECRET matching the key you use to authenticate updates inside your /admin console and GITHUB_TOKEN so it can update that repo.
-
-    Link to an External Portfolio: If you want another website to fetch your latest blog post (e.g., a Latest Log widget on your main portfolio), the included _headers file already enables CORS. Simply fetch https://your-domain.pages.dev/posts.json from your other site.
