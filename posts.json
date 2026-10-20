@@ -1,5 +1,13 @@
 [
   {
+    "id": "VC-SEC-001",
+    "title": "Listen: Vibe-Coding Security Is Not the Problem — Shipping Code You Don’t Understand Is",
+    "category": "Security, Vibe Coding, AI Coding Agents, Prompt Injection, Supply Chain Security, Application Security",
+    "readTime": "10",
+    "date": "Oct 20, 2026",
+    "excerpt": "Vibe-coding isn’t the problem. Shipping code you don’t understand is. Read the diff, check the package, and stop letting the AI dig your hole faster."
+  },
+  {
     "id": "SAUR-Security-Analysis-and-Threat-Engine",
     "title": "SAUR: Security Analysis & Threat Engine",
     "category": "AUR, SAUR, YARA, C++, C, CMAKE, SCANNER",
