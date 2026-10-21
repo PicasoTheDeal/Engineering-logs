@@ -32,7 +32,6 @@
 
   --dune-bg:none;
 
-  /* Mobile spacing scale */
   --pad-x: clamp(16px, 4vw, 80px);
   --topbar-h: 64px;
 }
@@ -70,7 +69,6 @@ body{
   transition:width .12s linear;
 }
 
-/* ---- TOPBAR ---- */
 .topbar{
   position:fixed; top:0; left:0; right:0; z-index:65;
   display:flex; align-items:center; justify-content:space-between;
@@ -112,7 +110,6 @@ body{
   white-space:nowrap;
 }
 
-/* ---- PAGE WRAPPER ---- */
 .page-wrapper{
   position:relative;
   z-index:2;
@@ -150,7 +147,6 @@ body{
 .back-link:hover i{color:var(--chartreuse); transform:translateX(-3px);}
 .back-link:hover::after{transform:scaleX(1);}
 
-/* ---- LOG HEAD ---- */
 .log-head{
   border:1px solid var(--line);
   margin-bottom:clamp(28px,5vh,64px);
@@ -238,7 +234,6 @@ body{
 }
 .log-meta dd .tag.sub{color:var(--fg-dim); border-color:var(--line);}
 
-/* ---- CONTENT GRID ---- */
 .content-grid{
   display:grid;
   grid-template-columns:minmax(0,1fr) 240px;
@@ -246,7 +241,6 @@ body{
   align-items:start;
 }
 
-/* ---- POST CONTENT ---- */
 #post-content{
   font-family:var(--font-mono);
   font-size:.88rem;
@@ -445,7 +439,6 @@ body{
   word-break:break-word;
 }
 
-/* ---- SIDEBAR ---- */
 .post-side{
   position:sticky;
   top:88px;
@@ -548,7 +541,6 @@ body{
   letter-spacing:.04em;
 }
 
-/* ---- FOOTER ---- */
 .post-footer{
   border-top:1px solid var(--line);
   margin-top:52px;
@@ -595,11 +587,6 @@ body{
   background-repeat:no-repeat;
 }
 
-/* ============================================================= */
-/* RESPONSIVE BREAKPOINTS                                        */
-/* ============================================================= */
-
-/* Tablet & small laptop: single column, sidebar on top as horizontal row */
 @media (max-width:900px){
   .content-grid{
     grid-template-columns:1fr;
@@ -623,7 +610,6 @@ body{
   }
 }
 
-/* Phone: compact everything */
 @media (max-width:680px){
   :root{
     --topbar-h: 56px;
@@ -742,7 +728,6 @@ body{
   }
 }
 
-/* Very narrow phones (≤380px): tighter still */
 @media (max-width:380px){
   :root{
     --pad-x: 12px;
@@ -755,14 +740,12 @@ body{
   .post-footer{font-size:.48rem; gap:8px;}
 }
 
-/* Landscape phones: reduce top padding */
 @media (max-height:500px) and (orientation:landscape){
   .page-wrapper{padding-top:calc(var(--topbar-h) + 16px);}
   .log-head-body{padding:16px 18px;}
   .log-title{font-size:1.2rem;}
 }
 
-/* Prefer reduced motion */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:.001ms !important;
