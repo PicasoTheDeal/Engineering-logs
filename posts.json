@@ -1,5 +1,13 @@
 [
   {
+    "id": "WED-STUFF-001",
+    "title": "Worst Wednesday *yet*",
+    "category": "Cybersecurity, Vulnerability, eMudhra, Certificate Authority, Elliptic Curve Cryptography, PHP, CVE-2026-109618, CVE-2026-109619, RCE, 0-Day",
+    "readTime": "15",
+    "date": "Oct 21, 2026",
+    "excerpt": "The private key for one of eMudhra's intermediate CAs was literally the number 4, plus a 12-year-old PHP 0-day (PHP2Shell) allowing unauthenticated RCE."
+  },
+  {
     "id": "VC-SEC-001",
     "title": "Listen: Vibe-Coding Security Is Not the Problem, Shipping Code You Don’t Understand Is",
     "category": "Security, Vibe Coding, AI Coding Agents, Prompt Injection, Supply Chain Security, Application Security",
