@@ -3,6 +3,8 @@
 Log stream engine. Vanilla frontend, edge worker for mutations, Git as the DB.
 No manual JSON the admin console commits every write through a Pages Function.
 
+Live at **https://logs.tetstack.dev** · part of [tetstack.dev](https://tetstack.dev).
+
 ## Routes
 
 | Path | Access | What it does |
@@ -64,5 +66,5 @@ Purge: http://localhost:8788/admin/delete.html
 ## Stack
 
 Vanilla HTML/CSS/JS, marked for markdown, one Pages Function, Git as
-storage,  procedural dune canvas (no image assets),
+storage,  self-hosted fonts and the shared Tetstack theme in `assets/` (same look as tetstack.dev, light/dark toggle in the top bar).
 text.

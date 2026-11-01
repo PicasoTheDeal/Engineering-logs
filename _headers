@@ -1,0 +1,9 @@
+/posts.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=60
+
+/posts/*
+  Access-Control-Allow-Origin: *
+
+/assets/*
+  Cache-Control: public, max-age=604800

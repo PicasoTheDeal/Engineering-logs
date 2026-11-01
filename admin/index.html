@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="theme-color" content="#0b0c0b">
+<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Systems Console — Node Writer</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem('tetstack-theme')==='light')document.documentElement.classList.add('light')}catch(e){}</script>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/tetstack.css">
 <style>
 :root{
   --white:#ffffff;
@@ -485,24 +487,26 @@ input:focus, textarea:focus{
   .btn-note{display:none;}
 }
 </style>
+<link rel="stylesheet" href="/assets/admin-skin.css">
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
 
-<header class="topbar" aria-label="Site header">
-  <a href="/" class="wordmark">TETSTACK<span class="dot">.</span><span class="slash">/</span>ADMIN</a>
-  <span class="top-meta">
-    <span>write mode</span>
-    <span class="sep">/</span>
-    <span>~/root/console</span>
-  </span>
+<div id="studio" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
+
+<header class="hud">
+  <a class="brand" href="/" aria-label="Engineering logs"><svg class="logo" viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-shadow" stroke="#5e625b" fill="none"><path d="M10.5 9 V114.5 H32.5 V9 Z" stroke-width="3" fill="none"/><path d="M44.5 9 V114.5 H74.5 V9 Z" stroke-width="3" fill="none"/><path d="M104.5 9 V114.5 H112.5 V9 Z" stroke-width="2.4" fill="none"/><path d="M42.6 129.2 C55 128.4 76 128.6 90.8 129.6 L91.2 144 C86 143.8 79 143.6 73.2 144.2 L73.6 185.4 C69 185.6 64 185.8 60.4 185.6 L59.8 144.6 C53 144.2 47 144.4 43.2 143.4 Z" stroke-width="3" fill="none"/></g><g class="lg-ink" stroke="#ecebe2" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#ecebe2"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#ecebe2"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#ecebe2"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#ecebe2"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#ecebe2"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g><g class="lg-ghost" stroke="#b5bba8" fill="none" opacity=".42"><path d="M34.5 10 H37.5 V107 H34.5 Z" stroke-width="1.4" fill="none"/><path d="M77 10 H97 V106 H77 Z" stroke-width="2.6" fill="none"/><rect x="77" y="96" width="20" height="10" stroke="none" fill="#b5bba8"/></g></svg><span class="chrome-t">TETSTACK</span><span class="brand-sub">/ ADMIN · write</span></a>
+  <div class="hud-r">
+    <button class="key theme-key" type="button" id="theme-toggle" aria-pressed="false" aria-label="Switch to light theme"><span class="tk-ico" aria-hidden="true"></span><span class="tk-lbl" id="theme-lbl">LIGHT</span></button>
+    <div class="lcd-mini" aria-hidden="true"><span class="lcd-lbl">MODE</span><span class="seg">WRITE</span><span class="lcd-lbl">TIME</span><span class="seg" id="hud-clock">00:00:00</span></div>
+  </div>
 </header>
 
 <div class="page-wrapper">
 
   <a href="/" class="back-link">
-    <i class="bi bi-arrow-left"></i>
+    <span>←</span>
     return to logs
   </a>
 
@@ -572,7 +576,7 @@ input:focus, textarea:focus{
 
       <div class="actions">
         <button type="submit" id="publish-btn" class="btn btn-primary" disabled>
-          Execute Push <i class="bi bi-arrow-right"></i>
+          Execute Push <span>→</span>
         </button>
         <span class="btn-note">confirm on execute</span>
       </div>
@@ -599,96 +603,12 @@ input:focus, textarea:focus{
 
   <footer class="page-footer">
     <span><span class="brand-mark">PicasoTheDeal</span> © 2026</span>
-    <span><a href="https://isitreallyme.pages.dev">← back to portfolio</a></span>
+    <span><a href="https://tetstack.dev">← back to portfolio</a></span>
   </footer>
 </div>
 
+<script src="/assets/tetstack.js"></script>
 <script>
-const DUNE_DARK  = { r: 35,  g: 61,  b: 77  };
-const DUNE_LIGHT = { r: 255, g: 255, b: 255 };
-
-function duneElevation(px, py) {
-  const warpX = Math.sin(py * 3.8 + 0.4) * 0.18 + Math.cos(py * 7.5) * 0.05;
-  const warpY = Math.cos(px * 3.2 + 1.1) * 0.15 + Math.sin(px * 6.2) * 0.04;
-  const nx = px + warpX;
-  const ny = py + warpY;
-
-  const ridge1 = Math.sin(nx * 3.4 - ny * 2.6);
-  const ridge2 = Math.cos(nx * 5.8 + ny * 4.5 + ridge1 * 1.4);
-  const ripple = Math.sin(nx * 12.0 - ny * 8.0) * 0.15;
-
-  const baseElevation = (ridge1 * 0.55 + ridge2 * 0.3 + ripple + 1) / 2;
-  const sharpCrest = Math.pow(Math.max(0, Math.min(1, baseElevation)), 1.35);
-  const diagonalSweep = px * 0.4 + py * 0.6;
-
-  return Math.max(0, Math.min(1, sharpCrest * 0.55 + diagonalSweep * 0.45));
-}
-
-function paintDune(ctx, w, h, grain){
-  const imgData = ctx.createImageData(w, h);
-  const data = imgData.data;
-  let i = 0;
-  for (let y = 0; y < h; y++){
-    const py = y / h;
-    for (let x = 0; x < w; x++){
-      const px = x / w;
-      const t = duneElevation(px, py);
-      const r = DUNE_DARK.r + t * (DUNE_LIGHT.r - DUNE_DARK.r);
-      const g = DUNE_DARK.g + t * (DUNE_LIGHT.g - DUNE_DARK.g);
-      const b = DUNE_DARK.b + t * (DUNE_LIGHT.b - DUNE_DARK.b);
-      const crestGrit = 1.0 + Math.sin(t * Math.PI) * 0.5;
-      const noise = (Math.random() - 0.5) * grain * crestGrit;
-      data[i]     = Math.min(255, Math.max(0, r + noise));
-      data[i + 1] = Math.min(255, Math.max(0, g + noise));
-      data[i + 2] = Math.min(255, Math.max(0, b + noise));
-      data[i + 3] = 255;
-      i += 4;
-    }
-  }
-  ctx.putImageData(imgData, 0, 0);
-}
-
-function generateDuneDataUrl(){
-  const w = 800, h = 500;
-  const c = document.createElement('canvas');
-  c.width = w; c.height = h;
-  const ctx = c.getContext('2d');
-  paintDune(ctx, w, h, 26);
-  return c.toDataURL('image/jpeg', 0.82);
-}
-
-(function applyDuneBackground(){
-  try {
-    const url = generateDuneDataUrl();
-    document.documentElement.style.setProperty('--dune-bg', 'url("' + url + '")');
-  } catch (e) {
-    console.warn('[tetstack] dune tile failed', e);
-  }
-})();
-
-(function initBackground(){
-  const canvas = document.getElementById('bg-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  function resize(){
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    canvas.width  = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-    canvas.style.width  = w + 'px';
-    canvas.style.height = h + 'px';
-    paintDune(ctx, canvas.width, canvas.height, 26);
-  }
-
-  resize();
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 140);
-  });
-})();
 
 function escapeHtml(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
