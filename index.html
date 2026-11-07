@@ -3,133 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0b0c0b">
+<meta name="theme-color" content="#0c1118">
 <meta name="description" content="Engineering logs by Kirubel (Tetstack): research notes and write-ups on security tooling, kernels and systems.">
-<title>TETSTACK — Engineering Logs</title>
+<title>Tetstack — Engineering logs</title>
 <link rel="canonical" href="https://logs.tetstack.dev/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/DSEG14Classic-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>try{if(localStorage.getItem('tetstack-theme')==='light')document.documentElement.classList.add('light')}catch(e){}</script>
 <link rel="stylesheet" href="/assets/tetstack.css">
 <style>
-.hero{padding:clamp(120px,18vh,180px) 0 clamp(36px,5vh,56px)}
-.hero .lede{margin-bottom:28px}
-.hero-keys{display:flex;flex-wrap:wrap;gap:8px}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:clamp(30px,5vh,48px) 0 clamp(56px,8vh,90px)}
-.stat{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px}
-.stat b{font-size:clamp(20px,2.4vw,30px);font-weight:400}
-.main-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:clamp(36px,5vw,70px);align-items:start;padding-bottom:40px}
-.list-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:22px}
-.list-head .eyebrow{margin:0}
-.clear-btn{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line-hi)}
-.clear-btn[hidden]{display:none}
-.posts{display:flex;flex-direction:column;gap:26px}
-.entry{display:grid;grid-template-columns:118px minmax(0,1fr);gap:clamp(16px,2.4vw,30px);padding:clamp(22px,3vw,32px);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
-.entry:hover{transform:translateY(-3px)}
-.entry[hidden]{display:none}
-.entry-side{display:flex;flex-direction:column;gap:8px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);border-right:1px solid var(--line);padding-right:clamp(12px,2vw,24px)}
-.entry-serial{font:700 13px/1 var(--f-m);letter-spacing:.14em;color:var(--red)}
-.entry-date{color:var(--dim)}
-.entry-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.entry-tag{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
-.entry-tag.primary{color:var(--gold);border-color:rgba(199,163,70,.5)}
-.entry-title em{font:italic 400 1.1em/1 var(--f-s);letter-spacing:0}
-.entry-title{font:600 clamp(18px,1.7vw,25px)/1.15 var(--f-d);letter-spacing:-.02em;color:var(--silver);margin-bottom:10px;transition:color .3s}
-.entry-excerpt{font:400 18px/1.45 var(--f-s);color:var(--dim);max-width:62ch;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.entry-cta{display:inline-flex;gap:10px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint);transition:color .3s,gap .3s}
-.entry:hover .entry-cta{color:var(--silver);gap:14px}
-.entry-sig{position:absolute;right:22px;bottom:16px;font:italic 400 20px/1 var(--f-s);color:var(--ghost)}
-.msg{padding:26px;font-size:11px;letter-spacing:.12em;color:var(--dim)}
+.hero{padding:calc(120px + 6vh) 0 0}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(38px,6vw,92px);line-height:1;letter-spacing:-.035em;font-variation-settings:'opsz' 96}
+.hero h1 em{font-style:normal;color:var(--acc)}
+.hero-row{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;margin-top:clamp(36px,5vw,64px);align-items:end}
+.hero p{font-size:clamp(17px,1.45vw,21px);line-height:1.5;color:var(--fg-2);max-width:40ch}
+.hero p b{font-weight:500;color:var(--fg)}
+.stats{display:flex;gap:28px;justify-self:end;font-size:13px;color:var(--fg-2)}
+.stats span{display:flex;flex-direction:column;gap:2px}
+.stats b{font-family:var(--serif);font-weight:300;font-size:clamp(26px,2.6vw,38px);line-height:1;letter-spacing:-.03em;color:var(--fg)}
+@media (max-width:860px){.hero-row{grid-template-columns:1fr;gap:26px}.stats{justify-self:start}}
+
+.stream{padding:clamp(80px,11vw,150px) 0 0}
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:clamp(22px,3vw,34px)}
+.filters .mono{margin-right:8px}
+.chip{font-size:12.5px;color:var(--fg-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;transition:color .25s,border-color .25s,background .25s}
+.chip:hover{color:var(--fg);border-color:var(--line-2)}
+.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip-more{color:var(--fg-3)}
+#clear-tags{font-size:12.5px;color:var(--fg-3);margin-left:6px}#clear-tags:hover{color:var(--fg)}
+#clear-tags[hidden]{display:none}
+.posts{border-top:1px solid var(--line)}
+.post{display:grid;grid-template-columns:130px 1fr 170px;gap:28px;align-items:baseline;padding:28px 0;border-bottom:1px solid var(--line);transition:opacity .35s}
+.posts:hover .post{opacity:.45}.posts .post:hover{opacity:1}
+.post[hidden]{display:none}
+.post .d{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--fg-3);display:flex;flex-direction:column;gap:6px}
+.post .d i{font-style:normal;color:var(--acc)}
+.post h2{font-family:var(--serif);font-weight:500;font-size:clamp(20px,1.9vw,27px);line-height:1.15;letter-spacing:-.02em}
+.post h2 em{font-style:normal;color:var(--acc)}
+.post p{margin-top:8px;font-size:15px;color:var(--fg-2);max-width:66ch;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post .t{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px;font-size:11.5px;color:var(--fg-3)}
+.post .t span{border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.post .t span:first-child{color:var(--acc);border-color:rgba(228,165,58,.4)}
+html.light .post .t span:first-child{border-color:rgba(181,73,27,.4)}
+.msg{padding:28px 0;font-size:14px;color:var(--fg-3)}
 .msg.err{color:var(--red)}
-.sidebar{position:sticky;top:96px;display:flex;flex-direction:column;gap:26px}
-.side-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
-.side-stats div{display:flex;flex-direction:column;gap:6px}
-.side-stats b{font-size:26px;font-weight:400}
-.tags-plate{padding:18px}
-.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
-.tag-chip{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:5px 10px;transition:color .25s,border-color .25s,background .25s}
-.tag-chip:hover{color:var(--silver);border-color:var(--line-hi)}
-.tag-chip.is-active{background:var(--steel);color:#151614;border-color:transparent}
-.recent{list-style:none}
-.recent a{display:block;padding:12px 16px;border-bottom:1px solid rgba(28,33,27,.14)}
-.recent li:last-child a{border-bottom:0}
-.recent a:hover{background:rgba(28,33,27,.07)}
-.recent .r-meta{display:block;font-size:8.5px;letter-spacing:.18em;color:rgba(28,33,27,.6);text-transform:uppercase}
-.recent .r-title{display:block;font:600 12.5px/1.3 var(--f-d);margin-top:5px;color:var(--seg)}
-@media (max-width:1100px){.main-grid{grid-template-columns:1fr}.sidebar{position:static}}
-@media (max-width:640px){
-  .stats{grid-template-columns:1fr;gap:16px}
-  .entry{grid-template-columns:1fr;gap:14px}
-  .entry-side{flex-direction:row;flex-wrap:wrap;gap:6px 14px;border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px}
-  .entry-excerpt{font-size:17px}
-}
+.list-foot{display:flex;justify-content:space-between;align-items:center;padding-top:20px;font-size:13px;color:var(--fg-2)}
+@media (max-width:860px){.post{grid-template-columns:1fr;gap:10px}.post .d{flex-direction:row;gap:14px}.post .t{justify-content:flex-start}}
 </style>
 </head>
 <body>
-<div id="studio" aria-hidden="true"></div>
 <div id="grain" aria-hidden="true"></div>
-
-<header class="hud">
-  <a class="brand" href="https://tetstack.dev" aria-label="Tetstack home"><svg class="logo" viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-shadow" stroke="#5e625b" fill="none"><path d="M10.5 9 V114.5 H32.5 V9 Z" stroke-width="3" fill="none"/><path d="M44.5 9 V114.5 H74.5 V9 Z" stroke-width="3" fill="none"/><path d="M104.5 9 V114.5 H112.5 V9 Z" stroke-width="2.4" fill="none"/><path d="M42.6 129.2 C55 128.4 76 128.6 90.8 129.6 L91.2 144 C86 143.8 79 143.6 73.2 144.2 L73.6 185.4 C69 185.6 64 185.8 60.4 185.6 L59.8 144.6 C53 144.2 47 144.4 43.2 143.4 Z" stroke-width="3" fill="none"/></g><g class="lg-ink" stroke="#ecebe2" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#ecebe2"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#ecebe2"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#ecebe2"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#ecebe2"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#ecebe2"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g><g class="lg-ghost" stroke="#b5bba8" fill="none" opacity=".42"><path d="M34.5 10 H37.5 V107 H34.5 Z" stroke-width="1.4" fill="none"/><path d="M77 10 H97 V106 H77 Z" stroke-width="2.6" fill="none"/><rect x="77" y="96" width="20" height="10" stroke="none" fill="#b5bba8"/></g></svg><span class="chrome-t">TETSTACK</span><span class="brand-sub">/ LOGS</span></a>
-  <nav class="rail" aria-label="Sites">
-    <a href="https://tetstack.dev"><b>01</b>Portfolio</a>
-    <a href="/" class="on"><b>02</b>Logs</a>
-    <a href="https://threat.tetstack.dev"><b>03</b>Threat</a>
-    <a href="https://plebis.tetstack.dev"><b>04</b>Plebis</a>
-    <a href="https://chaos.tetstack.dev"><b>05</b>Chaos</a>
+<header class="nav">
+  <a class="brand" href="https://tetstack.dev" aria-label="Tetstack home"><svg viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-ink" stroke="#e9e2d3" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#e9e2d3"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#e9e2d3"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#e9e2d3"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#e9e2d3"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#e9e2d3"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g></svg>Tetstack <small>/ logs</small></a>
+  <nav class="nav-links" aria-label="Sites">
+    <a href="https://tetstack.dev">Portfolio</a>
+    <a href="/" class="on keep">Logs</a>
+    <a href="https://threat.tetstack.dev">Threat</a>
+    <a href="https://plebis.tetstack.dev">Plebis</a>
+    <a href="https://chaos.tetstack.dev">Chaos</a>
+    <button type="button" id="theme" aria-pressed="false" aria-label="Switch to light theme">Light</button>
   </nav>
-  <div class="hud-r">
-    <button class="key theme-key" type="button" id="theme-toggle" aria-pressed="false" aria-label="Switch to light theme"><span class="tk-ico" aria-hidden="true"></span><span class="tk-lbl" id="theme-lbl">LIGHT</span></button>
-    <div class="lcd-mini" aria-hidden="true"><span class="lcd-lbl">LOGS</span><span class="seg" id="hud-count">--</span><span class="lcd-lbl">TIME</span><span class="seg" id="hud-clock">00:00:00</span></div>
-  </div>
 </header>
 
-<main class="wrap">
-  <section class="hero">
-    <span class="tag rv">~/root/logs · tail -f</span>
-    <h1 class="h2 rv">Engineering logs, <em>written down.</em></h1>
-    <p class="lede rv">Stuff I explained about my projects (some of them). Research notes, write-ups and the occasional <b>worst Wednesday</b>.</p>
-    <div class="hero-keys rv">
-      <a class="key" href="https://tetstack.dev"><span class="ink-red">←</span>tetstack.dev</a>
-      <a class="key" href="https://github.com/PicasoTheDeal" target="_blank" rel="noopener noreferrer"><span class="ink-blue">GH</span>GitHub</a>
-      <a class="key" href="https://t.me/Tetstack" target="_blank" rel="noopener noreferrer"><span class="ink-gold">TG</span>Telegram</a>
-    </div>
-    <div class="stats">
-      <div class="lcd-panel stat rv"><span class="lcd-lbl">LOG ENTRIES</span><b class="seg" id="stat-entries">--</b></div>
-      <div class="lcd-panel stat rv"><span class="lcd-lbl">ACTIVE TAGS</span><b class="seg" id="stat-tags">--</b></div>
-      <div class="lcd-panel stat rv"><span class="lcd-lbl">LAST WRITE</span><b class="seg" id="stat-last">--.--.--</b></div>
+<main>
+  <section class="hero wrap">
+    <h1 class="rv">Engineering logs, <em>written down.</em></h1>
+    <div class="hero-row">
+      <p class="rv">Research notes and write-ups on the things I build and break: security tooling, kernels, systems, and the occasional <b>worst Wednesday</b>.</p>
+      <div class="stats rv">
+        <span><b id="stat-entries">—</b>entries</span>
+        <span><b id="stat-tags">—</b>tags</span>
+        <span><b id="stat-last">—</b>last write</span>
+      </div>
     </div>
   </section>
 
-  <div class="main-grid">
-    <section aria-label="Log entries">
-      <div class="list-head"><span class="eyebrow">Runtime stream · <span id="shown-count">0</span> shown</span><button class="clear-btn" id="clear-tags" type="button" hidden>clear filter ×</button></div>
-      <div class="posts" id="posts-container"><p class="plate msg">[ querying log manifest... ]</p></div>
-    </section>
+  <section class="stream wrap" aria-label="Log entries">
+    <div class="filters rv"><span class="mono">Filter</span><div id="tag-cloud" style="display:contents"></div><button type="button" id="clear-tags" hidden>clear ×</button></div>
+    <div class="posts rv" id="posts-container"><p class="msg">Loading entries…</p></div>
+    <div class="list-foot rv"><span><span id="shown-count">0</span> shown</span><a class="ul" href="https://github.com/PicasoTheDeal/Engineering-logs" target="_blank" rel="noopener noreferrer">Source on GitHub →</a></div>
+  </section>
 
-    <aside class="sidebar" aria-label="Stream sidebar">
-      <div class="lcd-panel">
-        <div class="lcd-head"><span>Stream status</span><span style="color:var(--red)">REC</span></div>
-        <div class="side-stats">
-          <div><span class="lcd-lbl">ENTRIES</span><b class="seg" id="rail-entries">--</b></div>
-          <div><span class="lcd-lbl">TAGS</span><b class="seg" id="rail-tags">--</b></div>
-        </div>
-      </div>
-      <div class="plate tags-plate" id="tags">
-        <span class="eyebrow">Filter by tag</span>
-        <div class="tag-cloud" id="tag-cloud"></div>
-      </div>
-      <div class="lcd-panel">
-        <div class="lcd-head"><span>Latest signals</span><span>TX</span></div>
-        <ol class="recent" id="recent-list"></ol>
-      </div>
-    </aside>
-  </div>
-
-  <footer class="site-foot">
-    <svg class="logo logo-lg" viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-shadow" stroke="#5e625b" fill="none"><path d="M10.5 9 V114.5 H32.5 V9 Z" stroke-width="3" fill="none"/><path d="M44.5 9 V114.5 H74.5 V9 Z" stroke-width="3" fill="none"/><path d="M104.5 9 V114.5 H112.5 V9 Z" stroke-width="2.4" fill="none"/><path d="M42.6 129.2 C55 128.4 76 128.6 90.8 129.6 L91.2 144 C86 143.8 79 143.6 73.2 144.2 L73.6 185.4 C69 185.6 64 185.8 60.4 185.6 L59.8 144.6 C53 144.2 47 144.4 43.2 143.4 Z" stroke-width="3" fill="none"/></g><g class="lg-ink" stroke="#ecebe2" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#ecebe2"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#ecebe2"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#ecebe2"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#ecebe2"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#ecebe2"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g><g class="lg-ghost" stroke="#b5bba8" fill="none" opacity=".42"><path d="M34.5 10 H37.5 V107 H34.5 Z" stroke-width="1.4" fill="none"/><path d="M77 10 H97 V106 H77 Z" stroke-width="2.6" fill="none"/><rect x="77" y="96" width="20" height="10" stroke="none" fill="#b5bba8"/></g></svg>
-    <div class="foot"><span>K. — PicasoTheDeal © 2026</span><a href="https://tetstack.dev">tetstack.dev</a><a href="https://github.com/PicasoTheDeal/Engineering-logs" target="_blank" rel="noopener noreferrer">read the source</a></div>
+  <footer class="foot wrap">
+    <span>Kirubel — Tetstack © 2026</span>
+    <nav>
+      <a href="https://tetstack.dev">tetstack.dev</a>
+      <a href="https://github.com/PicasoTheDeal" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://t.me/Tetstack" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </nav>
   </footer>
 </main>
 
@@ -143,40 +105,32 @@ function parseDate(str){
   const d = new Date(str);
   return isNaN(d.getTime()) ? null : d;
 }
-function two(n){ return String(n).padStart(2, '0'); }
-function fmtDate(d){ return d ? d.getFullYear() + '/' + two(d.getMonth() + 1) + '/' + two(d.getDate()) : '----/--/--'; }
-function segDate(d){ return d ? String(d.getFullYear()).slice(2) + '.' + two(d.getMonth() + 1) + '.' + two(d.getDate()) : '--.--.--'; }
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(d){ return d ? MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() : '—'; }
+function shortDate(d){ return d ? MONTHS[d.getMonth()] + ' ' + d.getDate() : '—'; }
 function tagsOf(log){ return (log.category || 'Systems').split(',').map(t => t.trim()).filter(Boolean); }
 function setText(id, v){ const el = document.getElementById(id); if (el) el.textContent = String(v); }
 
 const active = new Set();
+const MAX_CHIPS = 10;
 
 function renderEntry(log, idx){
   const d = parseDate(log.date);
   const tags = tagsOf(log);
   const a = document.createElement('a');
-  a.className = 'entry plate rv';
+  a.className = 'post';
   a.href = '/post.html?id=' + encodeURIComponent(log.id);
   a.dataset.tags = JSON.stringify(tags.map(t => t.toLowerCase()));
   a.innerHTML =
-    '<div class="entry-side">' +
-      '<span class="entry-serial">Nº ' + String(idx + 1).padStart(3, '0') + '</span>' +
-      '<span class="entry-date">' + fmtDate(d) + '</span>' +
-      '<span>' + escapeHtml(String(log.readTime || '?')) + ' min read</span>' +
-    '</div>' +
-    '<div class="entry-body">' +
-      '<div class="entry-tags">' + tags.map((t, i) => '<span class="entry-tag' + (i === 0 ? ' primary' : '') + '">' + escapeHtml(t) + '</span>').join('') + '</div>' +
-      '<h2 class="entry-title">' + escapeHtml(log.title || 'untitled').replace(/\*([^*]+)\*/g, '<em>$1</em>') + '</h2>' +
-      '<p class="entry-excerpt">' + escapeHtml(log.excerpt || '') + '</p>' +
-      '<span class="entry-cta">read entry <span>→</span></span>' +
-    '</div>' +
-    '<span class="entry-sig" aria-hidden="true">k.</span>';
+    '<span class="d"><i>' + String(idx + 1).padStart(2, '0') + '</i><span>' + fmtDate(d) + '</span><span>' + escapeHtml(String(log.readTime || '?')) + ' min</span></span>' +
+    '<span><h2>' + escapeHtml(log.title || 'untitled').replace(/\*([^*]+)\*/g, '<em>$1</em>') + '</h2><p>' + escapeHtml(log.excerpt || '') + '</p></span>' +
+    '<span class="t">' + tags.slice(0, 3).map(t => '<span>' + escapeHtml(t) + '</span>').join('') + (tags.length > 3 ? '<span>+' + (tags.length - 3) + '</span>' : '') + '</span>';
   return a;
 }
 
 function applyFilter(){
   let shown = 0;
-  document.querySelectorAll('#posts-container .entry').forEach(el => {
+  document.querySelectorAll('#posts-container .post').forEach(el => {
     const tags = JSON.parse(el.dataset.tags || '[]');
     const ok = !active.size || tags.some(t => active.has(t));
     el.hidden = !ok;
@@ -184,22 +138,20 @@ function applyFilter(){
   });
   setText('shown-count', shown);
   document.getElementById('clear-tags').hidden = !active.size;
-  document.querySelectorAll('.tag-chip').forEach(c => c.classList.toggle('is-active', active.has(c.dataset.tag)));
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', active.has(c.dataset.tag)));
 }
 
 async function fetchLogs(){
   const postsContainer = document.getElementById('posts-container');
   const tagCloud = document.getElementById('tag-cloud');
-  const recentList = document.getElementById('recent-list');
   try {
     const res = await fetch('/posts.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error(res.status);
     const logs = await res.json();
     postsContainer.innerHTML = '';
     tagCloud.innerHTML = '';
-    recentList.innerHTML = '';
     if (!Array.isArray(logs) || !logs.length){
-      postsContainer.innerHTML = '<p class="plate msg">[ empty manifest — no runtime entries ]</p>';
+      postsContainer.innerHTML = '<p class="msg">Nothing here yet.</p>';
       return;
     }
     const sorted = [...logs].sort((a, b) => (parseDate(b.date) || 0) - (parseDate(a.date) || 0));
@@ -208,29 +160,35 @@ async function fetchLogs(){
       tagsOf(log).forEach(t => { const k = t.toLowerCase(); tagCount.set(k, { label: t, n: ((tagCount.get(k) || {}).n || 0) + 1 }); });
       postsContainer.appendChild(renderEntry(log, i));
     });
-    [...tagCount.entries()].sort((a, b) => b[1].n - a[1].n || a[1].label.localeCompare(b[1].label)).forEach(([k, v]) => {
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'tag-chip';
-      chip.dataset.tag = k;
-      chip.textContent = v.label + (v.n > 1 ? ' ·' + v.n : '');
-      chip.addEventListener('click', () => { active.has(k) ? active.delete(k) : active.add(k); applyFilter(); });
-      tagCloud.appendChild(chip);
-    });
-    sorted.slice(0, 4).forEach(log => {
-      const li = document.createElement('li');
-      li.innerHTML = '<a href="/post.html?id=' + encodeURIComponent(log.id) + '"><span class="r-meta">' + escapeHtml(log.date || '') + ' · ' + escapeHtml(tagsOf(log)[0]) + '</span><span class="r-title">' + escapeHtml(String(log.title || 'untitled').replace(/\*/g, '')) + '</span></a>';
-      recentList.appendChild(li);
-    });
-    const count = two(logs.length);
-    ['stat-entries', 'rail-entries', 'hud-count'].forEach(id => setText(id, count));
-    ['stat-tags', 'rail-tags'].forEach(id => setText(id, two(tagCount.size)));
-    setText('stat-last', segDate(parseDate(sorted[0].date)));
+    const ranked = [...tagCount.entries()].sort((a, b) => b[1].n - a[1].n || a[1].label.localeCompare(b[1].label));
+    let expanded = false;
+    function drawChips(){
+      tagCloud.innerHTML = '';
+      (expanded ? ranked : ranked.slice(0, MAX_CHIPS)).forEach(([k, v]) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip' + (active.has(k) ? ' on' : '');
+        chip.dataset.tag = k;
+        chip.textContent = v.label + (v.n > 1 ? ' · ' + v.n : '');
+        chip.addEventListener('click', () => { active.has(k) ? active.delete(k) : active.add(k); applyFilter(); });
+        tagCloud.appendChild(chip);
+      });
+      if (ranked.length > MAX_CHIPS){
+        const more = document.createElement('button');
+        more.type = 'button'; more.className = 'chip chip-more';
+        more.textContent = expanded ? 'less' : '+' + (ranked.length - MAX_CHIPS) + ' more';
+        more.addEventListener('click', () => { expanded = !expanded; drawChips(); });
+        tagCloud.appendChild(more);
+      }
+    }
+    drawChips();
+    setText('stat-entries', logs.length);
+    setText('stat-tags', tagCount.size);
+    setText('stat-last', shortDate(parseDate(sorted[0].date)));
     applyFilter();
     TS.reveal(postsContainer);
   } catch (e){
-    postsContainer.innerHTML = '<p class="plate msg err">[!] Failed to resolve log mapping descriptor.</p>';
-    recentList.innerHTML = '<li><a href="#"><span class="r-meta">!</span><span class="r-title">no signal</span></a></li>';
+    postsContainer.innerHTML = '<p class="msg err">Couldn’t load the entries.</p>';
   }
 }
 document.getElementById('clear-tags').addEventListener('click', () => { active.clear(); applyFilter(); });

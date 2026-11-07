@@ -3,126 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0b0c0b">
-<title>TETSTACK — Log</title>
+<meta name="theme-color" content="#0c1118">
+<title>Tetstack — Log</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>try{if(localStorage.getItem('tetstack-theme')==='light')document.documentElement.classList.add('light')}catch(e){}</script>
 <link rel="stylesheet" href="/assets/tetstack.css">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
-.read-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:95;background:var(--ghost)}
-.read-progress-fill{height:100%;width:0;background:var(--steel);box-shadow:0 0 12px rgba(247,245,234,.45)}
-.post-wrap{padding-top:clamp(110px,15vh,150px)}
-.back{display:inline-flex;gap:10px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint);margin-bottom:34px;transition:color .3s,gap .3s}
-.back:hover{color:var(--silver);gap:14px}
-.log-head{max-width:980px;margin-bottom:clamp(40px,6vh,64px)}
-.log-title{font-size:clamp(30px,4vw,60px);line-height:1.06}
-.log-title em{font-size:1.06em}
-.log-meta{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:8px}
-.log-meta .lcd-mini .seg{font-size:11px}
-.log-tags{display:flex;flex-wrap:wrap;gap:6px}
-.log-tag{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
-.log-tag.primary{color:var(--gold);border-color:rgba(199,163,70,.5)}
-.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:clamp(36px,5vw,72px);align-items:start}
-.article{padding:clamp(24px,4vw,56px)}
-#post-content{font:400 19px/1.62 var(--f-s);color:var(--silver2);max-width:72ch;overflow-wrap:break-word}
+.read-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:95;background:transparent}
+.read-progress-fill{height:100%;width:0;background:var(--acc)}
+.post-wrap{padding-top:calc(110px + 4vh)}
+.back{display:inline-flex;gap:8px;font-size:13.5px;color:var(--fg-2);margin-bottom:clamp(30px,4vw,48px);transition:color .3s,gap .3s}
+.back:hover{color:var(--fg);gap:12px}
+.log-head{max-width:980px;margin-bottom:clamp(44px,6vw,80px)}
+.log-title{font-family:var(--serif);font-weight:300;font-size:clamp(34px,5vw,74px);line-height:1.02;letter-spacing:-.035em;font-variation-settings:'opsz' 96}
+.log-title em{font-style:normal;color:var(--acc)}
+.log-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin-top:22px;font-size:13.5px;color:var(--fg-2)}
+.log-meta .d{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3)}
+.log-tags{display:flex;flex-wrap:wrap;gap:5px}
+.log-tag{font-size:11.5px;color:var(--fg-3);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.log-tag.primary{color:var(--acc);border-color:rgba(228,165,58,.4)}
+html.light .log-tag.primary{border-color:rgba(181,73,27,.4)}
+.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:clamp(36px,6vw,90px);align-items:start}
+#post-content{font-size:18px;line-height:1.65;color:var(--fg-2);max-width:70ch;overflow-wrap:break-word}
 #post-content > *:first-child{margin-top:0}
-#post-content h1,#post-content h2,#post-content h3,#post-content h4{font-family:var(--f-d);font-weight:600;letter-spacing:-.02em;line-height:1.2;color:var(--silver);margin:46px 0 16px;scroll-margin-top:110px}
-#post-content h1{font-size:clamp(22px,2.2vw,30px);padding-bottom:14px;border-bottom:1px solid var(--line)}
-#post-content h2{font-size:clamp(19px,1.8vw,24px);padding-bottom:12px;border-bottom:1px solid var(--line)}
-#post-content h3{font-size:16px}
-#post-content h4{font-size:14px}
-#post-content h2::before,#post-content h3::before{font:700 11px/1 var(--f-m);letter-spacing:.14em;color:var(--red);margin-right:12px;vertical-align:middle}
-#post-content h2::before{content:'§'}
-#post-content h3::before{content:'—'}
-#post-content p{margin:0 0 20px}
-#post-content a{color:var(--silver);border-bottom:1px solid var(--line-hi);transition:border-color .3s}
-#post-content a:hover{border-color:var(--gold)}
-#post-content strong{color:var(--silver);font-weight:400;font-family:var(--f-s);background:linear-gradient(transparent 62%,rgba(199,163,70,.28) 62%)}
-#post-content em{font-style:italic;color:var(--silver)}
-#post-content ul,#post-content ol{margin:0 0 22px;padding-left:24px}
+#post-content h1,#post-content h2,#post-content h3,#post-content h4{font-family:var(--serif);font-weight:500;letter-spacing:-.025em;line-height:1.15;color:var(--fg);margin:52px 0 16px;scroll-margin-top:110px}
+#post-content h1{font-size:clamp(26px,2.6vw,36px);font-weight:400}
+#post-content h2{font-size:clamp(22px,2.1vw,29px)}
+#post-content h3{font-size:19px}
+#post-content h4{font-size:16px}
+#post-content p{margin:0 0 22px}
+#post-content a{color:var(--fg);border-bottom:1px solid var(--line-2);transition:border-color .3s}
+#post-content a:hover{border-color:var(--acc)}
+#post-content strong{color:var(--fg);font-weight:600}
+#post-content em{color:var(--fg)}
+#post-content ul,#post-content ol{margin:0 0 22px;padding-left:22px}
 #post-content li{margin-bottom:8px;padding-left:4px}
-#post-content ul li::marker{color:var(--gold)}
-#post-content ol li::marker{color:var(--gold);font:600 13px var(--f-m)}
-#post-content blockquote{margin:0 0 24px;padding:16px 22px;border-left:2px solid var(--gold);background:var(--ghost);border-radius:0 10px 10px 0;font-style:italic}
+#post-content li::marker{color:var(--acc)}
+#post-content blockquote{margin:0 0 26px;padding:4px 0 4px 22px;border-left:2px solid var(--acc);color:var(--fg)}
 #post-content blockquote p:last-child{margin-bottom:0}
-#post-content code{font:400 .74em var(--f-m);color:var(--silver);background:var(--ghost);border:1px solid var(--line);border-radius:5px;padding:2px 6px;word-break:break-word}
-#post-content pre{position:relative;margin:0 0 26px;padding:44px 18px 18px;border-radius:12px;background:linear-gradient(180deg,#1b1d1a,#0f100f);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 0 0 1px rgba(236,235,226,.12);overflow-x:auto;scrollbar-width:thin;line-height:1.7}
-#post-content pre::before{content:'CODE';position:absolute;top:14px;left:18px;font:600 9px/1 var(--f-m);letter-spacing:.24em;color:rgba(236,235,226,.4)}
-#post-content pre::after{content:'';position:absolute;top:14px;right:18px;width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 10px rgba(184,54,44,.8)}
-#post-content pre code{font-size:13px;color:#e6e5dc;background:none;border:0;padding:0;word-break:normal}
-#post-content hr{border:0;height:1px;background:var(--line);margin:40px 0}
-#post-content img{max-width:100%;height:auto;border-radius:10px;box-shadow:0 0 0 1px var(--line)}
-#post-content table{width:100%;border-collapse:collapse;margin:0 0 26px;font:400 12px/1.5 var(--f-m);display:block;overflow-x:auto}
+#post-content code{font-family:var(--mono);font-size:.82em;color:var(--fg);background:var(--ghost);border-radius:4px;padding:2px 6px;word-break:break-word}
+#post-content pre{margin:0 0 28px;padding:20px 22px;border-radius:10px;background:#090b0e;border:1px solid var(--line);overflow-x:auto;scrollbar-width:thin;line-height:1.65}
+html.light #post-content pre{background:#121a26}
+#post-content pre code{font-size:13.5px;color:#e9e2d3;background:none;padding:0;word-break:normal}
+#post-content hr{border:0;height:1px;background:var(--line);margin:44px 0}
+#post-content img{max-width:100%;height:auto;border-radius:8px}
+#post-content table{width:100%;border-collapse:collapse;margin:0 0 28px;font-size:14px;display:block;overflow-x:auto}
 #post-content th,#post-content td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-#post-content th{font-weight:600;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
-#post-content .fatal{font:400 12px/1.6 var(--f-m);color:var(--red);letter-spacing:.06em}
-.post-side{position:sticky;top:96px;display:flex;flex-direction:column;gap:26px}
-.read-lcd{padding:16px 18px}
-.read-lcd .row{display:flex;justify-content:space-between;align-items:center}
-.read-lcd b{font-size:30px;font-weight:400}
-.read-bar{height:6px;margin-top:14px;border-radius:3px;background:rgba(28,33,27,.15);overflow:hidden}
-.read-bar i{display:block;height:100%;width:0;background:var(--seg)}
-.toc{padding:18px}
-.toc-list{list-style:none;display:flex;flex-direction:column}
-.toc-item{display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px;line-height:1.4;color:var(--dim);transition:color .25s,padding .25s}
+#post-content th{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3)}
+#post-content .fatal{color:var(--red);font-size:15px}
+.post-side{position:sticky;top:96px;display:flex;flex-direction:column;gap:30px}
+.read-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--fg-2)}
+.read-row b{font-family:var(--serif);font-weight:300;font-size:30px;letter-spacing:-.03em;color:var(--fg)}
+.read-bar{height:1px;margin-top:10px;background:var(--line);overflow:hidden}
+.read-bar i{display:block;height:100%;width:0;background:var(--acc)}
+.toc-list{list-style:none;display:flex;flex-direction:column;margin-top:14px}
+.toc-item{display:block;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.4;color:var(--fg-2);transition:color .25s,padding .25s}
 .toc-list li:last-child .toc-item{border-bottom:0}
-.toc-item:hover,.toc-item.on{color:var(--silver);padding-left:6px}
-.toc-item.on{box-shadow:inset 2px 0 0 var(--gold)}
-.toc-item.is-sub{padding-left:16px;font-size:10.5px;color:var(--faint)}
-.toc-item.is-sub:hover,.toc-item.is-sub.on{padding-left:22px}
-.side-empty{font-size:11px;color:var(--faint)}
-@media (max-width:1100px){.content-grid{grid-template-columns:1fr}.post-side{position:static;order:-1}.toc{display:none}}
-@media (max-width:640px){#post-content{font-size:18px}.article{padding:22px 18px}}
+.toc-item:hover,.toc-item.on{color:var(--fg);padding-left:6px}
+.toc-item.on{box-shadow:inset 2px 0 0 var(--acc)}
+.toc-item.is-sub{padding-left:14px;font-size:12.5px;color:var(--fg-3)}
+.toc-item.is-sub:hover,.toc-item.is-sub.on{padding-left:20px}
+.side-empty{font-size:13px;color:var(--fg-3);padding-top:8px}
+@media (max-width:1000px){.content-grid{grid-template-columns:1fr}.post-side{position:static;order:-1;gap:18px}.toc{display:none}}
+@media (max-width:640px){#post-content{font-size:17px}}
 </style>
 </head>
 <body>
-<div id="studio" aria-hidden="true"></div>
 <div id="grain" aria-hidden="true"></div>
 <div class="read-progress" aria-hidden="true"><div class="read-progress-fill" id="read-fill"></div></div>
-
-<header class="hud">
-  <a class="brand" href="https://tetstack.dev" aria-label="Tetstack home"><svg class="logo" viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-shadow" stroke="#5e625b" fill="none"><path d="M10.5 9 V114.5 H32.5 V9 Z" stroke-width="3" fill="none"/><path d="M44.5 9 V114.5 H74.5 V9 Z" stroke-width="3" fill="none"/><path d="M104.5 9 V114.5 H112.5 V9 Z" stroke-width="2.4" fill="none"/><path d="M42.6 129.2 C55 128.4 76 128.6 90.8 129.6 L91.2 144 C86 143.8 79 143.6 73.2 144.2 L73.6 185.4 C69 185.6 64 185.8 60.4 185.6 L59.8 144.6 C53 144.2 47 144.4 43.2 143.4 Z" stroke-width="3" fill="none"/></g><g class="lg-ink" stroke="#ecebe2" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#ecebe2"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#ecebe2"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#ecebe2"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#ecebe2"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#ecebe2"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g><g class="lg-ghost" stroke="#b5bba8" fill="none" opacity=".42"><path d="M34.5 10 H37.5 V107 H34.5 Z" stroke-width="1.4" fill="none"/><path d="M77 10 H97 V106 H77 Z" stroke-width="2.6" fill="none"/><rect x="77" y="96" width="20" height="10" stroke="none" fill="#b5bba8"/></g></svg><span class="chrome-t">TETSTACK</span><span class="brand-sub">/ LOGS</span></a>
-  <nav class="rail" aria-label="Sites">
-    <a href="https://tetstack.dev"><b>01</b>Portfolio</a>
-    <a href="/" class="on"><b>02</b>Logs</a>
-    <a href="https://threat.tetstack.dev"><b>03</b>Threat</a>
-    <a href="https://plebis.tetstack.dev"><b>04</b>Plebis</a>
-    <a href="https://chaos.tetstack.dev"><b>05</b>Chaos</a>
+<header class="nav">
+  <a class="brand" href="https://tetstack.dev" aria-label="Tetstack home"><svg viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-ink" stroke="#e9e2d3" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#e9e2d3"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#e9e2d3"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#e9e2d3"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#e9e2d3"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#e9e2d3"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g></svg>Tetstack <small>/ logs</small></a>
+  <nav class="nav-links" aria-label="Sites">
+    <a href="https://tetstack.dev">Portfolio</a>
+    <a href="/" class="on keep">Logs</a>
+    <a href="https://threat.tetstack.dev">Threat</a>
+    <a href="https://plebis.tetstack.dev">Plebis</a>
+    <a href="https://chaos.tetstack.dev">Chaos</a>
+    <button type="button" id="theme" aria-pressed="false" aria-label="Switch to light theme">Light</button>
   </nav>
-  <div class="hud-r">
-    <button class="key theme-key" type="button" id="theme-toggle" aria-pressed="false" aria-label="Switch to light theme"><span class="tk-ico" aria-hidden="true"></span><span class="tk-lbl" id="theme-lbl">LIGHT</span></button>
-    <div class="lcd-mini" aria-hidden="true"><span class="lcd-lbl">READ</span><span class="seg" id="hud-read">000%</span><span class="lcd-lbl">TIME</span><span class="seg" id="hud-clock">00:00:00</span></div>
-  </div>
 </header>
 
 <main class="wrap post-wrap">
-  <a href="/" class="back"><span>←</span>back to the stream</a>
+  <a href="/" class="back"><span>←</span>All logs</a>
   <header class="log-head">
-    <span class="tag" id="log-path">~/root/logs/pending</span>
-    <h1 class="h2 log-title" id="post-title">Resolving <em>log…</em></h1>
+    <span class="mono" id="log-path">logs</span>
+    <h1 class="log-title" id="post-title" style="margin-top:14px">Loading…</h1>
     <div class="log-meta" id="log-meta"></div>
   </header>
 
   <div class="content-grid">
-    <article class="plate article"><div id="post-content"></div></article>
+    <article><div id="post-content"></div></article>
     <aside class="post-side" aria-label="Reading aids">
-      <div class="lcd-panel read-lcd">
-        <div class="row"><span class="lcd-lbl">PROGRESS</span><b class="seg" id="read-pct">000%</b></div>
+      <div>
+        <div class="read-row"><span>Progress</span><b id="read-pct">0%</b></div>
         <div class="read-bar"><i id="read-bar"></i></div>
       </div>
-      <div class="plate toc">
-        <span class="eyebrow">Contents</span>
-        <ul class="toc-list" id="toc-list"><li class="side-empty">no sections</li></ul>
+      <div class="toc">
+        <span class="mono">Contents</span>
+        <ul class="toc-list" id="toc-list"><li class="side-empty">No sections</li></ul>
       </div>
     </aside>
   </div>
 
-  <footer class="site-foot">
-    <svg class="logo logo-lg" viewBox="0 0 120 192" fill="none" stroke-linecap="square" aria-hidden="true"><g class="lg-shadow" stroke="#5e625b" fill="none"><path d="M10.5 9 V114.5 H32.5 V9 Z" stroke-width="3" fill="none"/><path d="M44.5 9 V114.5 H74.5 V9 Z" stroke-width="3" fill="none"/><path d="M104.5 9 V114.5 H112.5 V9 Z" stroke-width="2.4" fill="none"/><path d="M42.6 129.2 C55 128.4 76 128.6 90.8 129.6 L91.2 144 C86 143.8 79 143.6 73.2 144.2 L73.6 185.4 C69 185.6 64 185.8 60.4 185.6 L59.8 144.6 C53 144.2 47 144.4 43.2 143.4 Z" stroke-width="3" fill="none"/></g><g class="lg-ink" stroke="#ecebe2" fill="none"><path d="M30 40 V6 H8 V112 H30 V54" stroke-width="3.2"/><rect x="8" y="105" width="22" height="7" stroke="none" fill="#ecebe2"/><rect x="8" y="6" width="22" height="4" stroke="none" fill="#ecebe2"/><path d="M42 70 V6 H72 V112 H42 V82" stroke-width="3.2"/><rect x="42" y="6" width="30" height="6.5" stroke="none" fill="#ecebe2"/><rect x="42" y="103" width="30" height="9" stroke="none" fill="#ecebe2"/><path d="M102 6 H110 V112 H102 Z" stroke-width="2.6"/><rect x="102" y="106" width="8" height="6" stroke="none" fill="#ecebe2"/><path d="M40.2 126.6 C53 125.6 74 125.9 88.4 127 L88.8 141.4 C83.6 141.1 76.6 140.9 70.8 141.6 L71.2 182.8 C66.6 183 61.6 183.2 58 183 L57.4 142 C50.6 141.6 44.6 141.8 40.8 140.8 Z" stroke-width="2.6" fill="none"/></g><g class="lg-ghost" stroke="#b5bba8" fill="none" opacity=".42"><path d="M34.5 10 H37.5 V107 H34.5 Z" stroke-width="1.4" fill="none"/><path d="M77 10 H97 V106 H77 Z" stroke-width="2.6" fill="none"/><rect x="77" y="96" width="20" height="10" stroke="none" fill="#b5bba8"/></g></svg>
-    <div class="foot"><span>K. — PicasoTheDeal © 2026</span><a href="/">back to stream</a><a href="https://tetstack.dev">tetstack.dev</a></div>
+  <footer class="foot">
+    <span>Kirubel — Tetstack © 2026</span>
+    <nav>
+      <a href="/">All logs</a>
+      <a href="https://tetstack.dev">tetstack.dev</a>
+    </nav>
   </footer>
 </main>
 
@@ -133,7 +124,7 @@ function escapeHtml(s){
 }
 function buildMeta(log){
   const tags = (log.category || 'Systems').split(',').map(t => t.trim()).filter(Boolean);
-  return '<div class="lcd-mini"><span class="lcd-lbl">DATE</span><span class="seg">' + escapeHtml(log.date || '—') + '</span><span class="lcd-lbl">READ</span><span class="seg">' + escapeHtml(String(log.readTime || '?')) + ' MIN</span></div>' +
+  return '<span class="d">' + escapeHtml(log.date || '—') + ' · ' + escapeHtml(String(log.readTime || '?')) + ' min read</span>' +
     '<div class="log-tags">' + tags.map((t, i) => '<span class="log-tag' + (i === 0 ? ' primary' : '') + '">' + escapeHtml(t) + '</span>').join('') + '</div>';
 }
 function titleHTML(t){
@@ -147,7 +138,7 @@ let tocLinks = [];
 function buildTOC(root){
   const headings = root.querySelectorAll('h2, h3');
   const tocList = document.getElementById('toc-list');
-  if (!headings.length){ tocList.innerHTML = '<li class="side-empty">no sections</li>'; return; }
+  if (!headings.length){ tocList.innerHTML = '<li class="side-empty">No sections</li>'; return; }
   tocList.innerHTML = '';
   headings.forEach((h, i) => {
     const id = 'sec-' + i;
@@ -165,16 +156,15 @@ function buildTOC(root){
 }
 function bindProgress(){
   const fill = document.getElementById('read-fill'), bar = document.getElementById('read-bar');
-  const pct = document.getElementById('read-pct'), hud = document.getElementById('hud-read');
+  const pct = document.getElementById('read-pct');
   function update(){
     const h = document.documentElement;
     const total = h.scrollHeight - h.clientHeight;
     const p = total > 0 ? Math.min(1, Math.max(0, h.scrollTop / total)) : 0;
-    const v = Math.round(p * 100), txt = String(v).padStart(3, '0') + '%';
+    const v = Math.round(p * 100);
     fill.style.width = v + '%';
     bar.style.width = v + '%';
-    pct.textContent = txt;
-    hud.textContent = txt;
+    pct.textContent = v + '%';
     let cur = null;
     tocLinks.forEach(([hd, a]) => { if (hd.getBoundingClientRect().top < 140) cur = a; });
     tocLinks.forEach(([, a]) => a.classList.toggle('on', a === cur));
@@ -187,12 +177,12 @@ function bindProgress(){
 async function loadActiveLog(refresh){
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id){ window.location.href = '/'; return; }
-  document.getElementById('log-path').textContent = '~/root/logs/' + id;
+  document.getElementById('log-path').textContent = 'logs / ' + id;
   try {
     const res = await fetch('/posts/' + encodeURIComponent(id) + '.json');
     if (!res.ok) throw new Error('not found');
     const log = await res.json();
-    document.title = String(log.title || 'Log').replace(/\*/g, '') + ' — TETSTACK';
+    document.title = String(log.title || 'Log').replace(/\*/g, '') + ' — Tetstack';
     document.getElementById('post-title').innerHTML = titleHTML(log.title);
     document.getElementById('log-meta').innerHTML = buildMeta(log);
     const contentEl = document.getElementById('post-content');
@@ -201,10 +191,10 @@ async function loadActiveLog(refresh){
     buildTOC(contentEl);
     if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
   } catch (e){
-    document.title = 'FATAL: LOG UNRESOLVED — TETSTACK';
-    document.getElementById('post-title').innerHTML = 'Log <em>unresolved.</em>';
-    document.getElementById('log-meta').innerHTML = '<div class="lcd-mini"><span class="lcd-lbl">STATUS</span><span class="seg">SIGNAL LOST</span></div>';
-    document.getElementById('post-content').innerHTML = '<div class="fatal">[!] Specified kernel documentation segment could not be located on the filesystem host cluster.</div>';
+    document.title = 'Not found — Tetstack';
+    document.getElementById('post-title').innerHTML = 'Log <em>not found.</em>';
+    document.getElementById('log-meta').innerHTML = '';
+    document.getElementById('post-content').innerHTML = '<div class="fatal">There is no entry with that id.</div>';
   }
   refresh();
 }

@@ -1,7 +1,6 @@
 (function () {
   var doc = document, root = doc.documentElement;
   root.classList.add('js');
-  function pad(n) { return (n < 10 ? '0' : '') + n; }
   var g = doc.getElementById('grain');
   if (g) {
     var c = doc.createElement('canvas'); c.width = c.height = 200;
@@ -10,17 +9,13 @@
     x.putImageData(d, 0, 0);
     g.style.backgroundImage = 'url(' + c.toDataURL('image/png') + ')';
   }
-  var clock = doc.getElementById('hud-clock');
-  if (clock) {
-    var tick = function () { var t = new Date(); clock.textContent = pad(t.getHours()) + ':' + pad(t.getMinutes()) + ':' + pad(t.getSeconds()); };
-    tick(); setInterval(tick, 1000);
-  }
-  var btn = doc.getElementById('theme-toggle'), lbl = doc.getElementById('theme-lbl'), meta = doc.querySelector('meta[name="theme-color"]');
+  var btn = doc.getElementById('theme') || doc.getElementById('theme-toggle'), lbl = doc.getElementById('theme-lbl'), meta = doc.querySelector('meta[name="theme-color"]');
   function apply(light, save) {
     root.classList.toggle('light', light);
-    if (lbl) lbl.textContent = light ? 'DARK' : 'LIGHT';
+    var t = light ? 'Dark' : 'Light';
+    if (lbl) lbl.textContent = t; else if (btn) btn.textContent = t;
     if (btn) { btn.setAttribute('aria-pressed', light ? 'true' : 'false'); btn.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme'); }
-    if (meta) meta.setAttribute('content', light ? '#e4e4dc' : '#0b0c0b');
+    if (meta) meta.setAttribute('content', light ? '#ebe3d2' : '#0c1118');
     if (save) { try { localStorage.setItem('tetstack-theme', light ? 'light' : 'dark'); } catch (e) {} }
   }
   if (btn) btn.addEventListener('click', function () { apply(!root.classList.contains('light'), true); });
