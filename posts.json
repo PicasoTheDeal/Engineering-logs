@@ -1,5 +1,13 @@
 [
   {
+    "id": "OS-SLOP-001",
+    "title": "Why Omarchy and Windows are slop and a spyware plus a bloatware.",
+    "category": "Security, Omarchy, Windows, Linux, Privacy, Docker, Telemetry, Recall, CVE, Patch Tuesday, Distros",
+    "readTime": "20",
+    "date": "Nov 11, 2026",
+    "excerpt": "A full explanation on why to avoid Mr.Slop and Ms.Spyware and their common character being bloatware."
+  },
+  {
     "id": "WED-STUFF-001",
     "title": "Worst Wednesday *yet*",
     "category": "Cybersecurity, Vulnerability, eMudhra, Certificate Authority, Elliptic Curve Cryptography, PHP, CVE-2026-109618, CVE-2026-109619, RCE, 0-Day",
