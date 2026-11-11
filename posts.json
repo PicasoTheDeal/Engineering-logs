@@ -1,13 +1,5 @@
 [
   {
-    "id": "OS-SLOP-001",
-    "title": "Choose the right OS, before you regret it (Slop Omarchy and Spyware Windows)",
-    "category": "Operating Systems, Omarchy, Windows 11, Privacy, Security, Linux, Arch, Docker, Recall, Telemetry, CVE, Zero-Day, Patch Tuesday, Distro Recommendations",
-    "readTime": "20",
-    "date": "Nov 11, 2026",
-    "excerpt": "Why hate on Mr.slop and Ms.spyware"
-  },
-  {
     "id": "WED-STUFF-001",
     "title": "Worst Wednesday *yet*",
     "category": "Cybersecurity, Vulnerability, eMudhra, Certificate Authority, Elliptic Curve Cryptography, PHP, CVE-2026-109618, CVE-2026-109619, RCE, 0-Day",
